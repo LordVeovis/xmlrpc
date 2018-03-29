@@ -75,10 +75,10 @@ namespace CookComputing.XmlRpc
         assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
       string moduleName = assemblyName + ".dll";
       AssemblyBuilder assBldr = BuildAssembly(itf, assemblyName,
-        moduleName, typeName, AssemblyBuilderAccess.RunAndSave);
+        moduleName, typeName, AssemblyBuilderAccess.Run);
       Type proxyType = assBldr.GetType(typeName);
       object ret = Activator.CreateInstance(proxyType);
-      assBldr.Save(moduleName);
+      //assBldr.Save(moduleName);
       return ret;
     }
 
@@ -95,13 +95,10 @@ namespace CookComputing.XmlRpc
       ArrayList endMethods = GetXmlRpcEndMethods(itf);
       AssemblyName assName = new AssemblyName();
       assName.Name = assemblyName;
-      if (access == AssemblyBuilderAccess.RunAndSave)
+      if (access == AssemblyBuilderAccess.Run)
         assName.Version = itf.Assembly.GetName().Version;
-      AssemblyBuilder assBldr = AppDomain.CurrentDomain.DefineDynamicAssembly(
-        assName, access);
-      ModuleBuilder modBldr = (access == AssemblyBuilderAccess.Run
-        ? assBldr.DefineDynamicModule(assName.Name)
-        : assBldr.DefineDynamicModule(assName.Name, moduleName));
+      AssemblyBuilder assBldr = AssemblyBuilder.DefineDynamicAssembly(assName, access);
+      ModuleBuilder modBldr = assBldr.DefineDynamicModule(assName.Name);
       TypeBuilder typeBldr = modBldr.DefineType(
         typeName,
         TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public,
