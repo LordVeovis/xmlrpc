@@ -23,286 +23,244 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System.Linq;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
-  using System.Collections;
-  using System.Collections.Generic;
-  using System.Reflection;
-  using System.Text.RegularExpressions;
+	using System;
+	using System.Collections;
+	using System.Reflection;
 
-  public enum XmlRpcType
-  {
-    tInvalid,
-    tInt32,
-    tInt64,
-    tBoolean,
-    tString,
-    tDouble,
-    tDateTime,
-    tBase64,
-    tStruct,
-    tHashtable,
-    tArray,
-    tMultiDimArray,
-    tVoid
-  }
+	public enum XmlRpcType
+	{
+		tInvalid,
+		tInt32,
+		tInt64,
+		tBoolean,
+		tString,
+		tDouble,
+		tDateTime,
+		tBase64,
+		tStruct,
+		tHashtable,
+		tArray,
+		tMultiDimArray,
+		tVoid
+	}
 
-  public class XmlRpcServiceInfo
-  {
-    public static XmlRpcServiceInfo CreateServiceInfo(Type type)
-    {
-      XmlRpcServiceInfo svcInfo = new XmlRpcServiceInfo();
-      // extract service info
-      XmlRpcServiceAttribute svcAttr = (XmlRpcServiceAttribute)
-        Attribute.GetCustomAttribute(type, typeof(XmlRpcServiceAttribute));
-      if (svcAttr != null && svcAttr.Description != "")
-        svcInfo.doc = svcAttr.Description;
-      if (svcAttr != null && svcAttr.Name != "")
-        svcInfo.Name = svcAttr.Name;
-      else
-        svcInfo.Name = type.Name;
-      // extract method info
-      Hashtable methods = new Hashtable();
+	public class XmlRpcServiceInfo
+	{
+		public static XmlRpcServiceInfo CreateServiceInfo(Type type)
+		{
+			var svcInfo = new XmlRpcServiceInfo();
+			// extract service info
+			var svcAttr = (XmlRpcServiceAttribute)
+			  Attribute.GetCustomAttribute(type, typeof(XmlRpcServiceAttribute));
+			if (svcAttr != null && svcAttr.Description != "")
+				svcInfo.Doc = svcAttr.Description;
+			if (svcAttr != null && svcAttr.Name != "")
+				svcInfo.Name = svcAttr.Name;
+			else
+				svcInfo.Name = type.Name;
+			// extract method info
+			var methods = new Hashtable();
 
-      foreach (Type itf in type.GetInterfaces())
-      {
-        XmlRpcServiceAttribute itfAttr = (XmlRpcServiceAttribute)
-          Attribute.GetCustomAttribute(itf, typeof(XmlRpcServiceAttribute));
-        if (itfAttr != null)
-          svcInfo.doc = itfAttr.Description;
+			foreach (var itf in type.GetInterfaces())
+			{
+				var itfAttr = (XmlRpcServiceAttribute)
+				  Attribute.GetCustomAttribute(itf, typeof(XmlRpcServiceAttribute));
+				if (itfAttr != null)
+					svcInfo.Doc = itfAttr.Description;
 #if (!COMPACT_FRAMEWORK)
-        InterfaceMapping imap = type.GetInterfaceMap(itf);
-        foreach (MethodInfo mi in imap.InterfaceMethods)
-        {
-          ExtractMethodInfo(methods, mi, itf);
-        }
+				var imap = type.GetInterfaceMap(itf);
+				foreach (var mi in imap.InterfaceMethods)
+				{
+					ExtractMethodInfo(methods, mi, itf);
+				}
 #else
         foreach (MethodInfo mi in itf.GetMethods())
         {
           ExtractMethodInfo(methods, mi, itf);
         }
 #endif
-      }
+			}
 
-      foreach (MethodInfo mi in type.GetMethods())
-      {
-        ArrayList mthds = new ArrayList();
-        mthds.Add(mi);
-        MethodInfo curMi = mi;
-        while (true)
-        {
-          MethodInfo baseMi = curMi.GetBaseDefinition();
-          if (baseMi.DeclaringType == curMi.DeclaringType)
-            break;
-          mthds.Insert(0, baseMi);
-          curMi = baseMi;
-        }
-        foreach (MethodInfo mthd in mthds)
-        {
-          ExtractMethodInfo(methods, mthd, type);
-        }
-      }
-      svcInfo.methodInfos = new XmlRpcMethodInfo[methods.Count];
-      methods.Values.CopyTo(svcInfo.methodInfos, 0);
-      Array.Sort(svcInfo.methodInfos);
-      return svcInfo;
-    }
+			foreach (var mi in type.GetMethods())
+			{
+				var mthds = new ArrayList
+				{
+					mi
+				};
+				var curMi = mi;
+				while (true)
+				{
+					var baseMi = curMi.GetBaseDefinition();
+					if (baseMi.DeclaringType == curMi.DeclaringType)
+						break;
+					mthds.Insert(0, baseMi);
+					curMi = baseMi;
+				}
+				foreach (MethodInfo mthd in mthds)
+				{
+					ExtractMethodInfo(methods, mthd, type);
+				}
+			}
+			svcInfo.Methods = new XmlRpcMethodInfo[methods.Count];
+			methods.Values.CopyTo(svcInfo.Methods, 0);
+			Array.Sort(svcInfo.Methods);
+			return svcInfo;
+		}
 
-    static void ExtractMethodInfo(Hashtable methods, MethodInfo mi, Type type)
-    {
-      XmlRpcMethodAttribute attr = (XmlRpcMethodAttribute)
-        Attribute.GetCustomAttribute(mi,
-        typeof(XmlRpcMethodAttribute));
-      if (attr == null)
-        return;
-      XmlRpcMethodInfo mthdInfo = new XmlRpcMethodInfo();
-      mthdInfo.MethodInfo = mi;
-      mthdInfo.XmlRpcName = GetXmlRpcMethodName(mi);
-      mthdInfo.MiName = mi.Name;
-      mthdInfo.Doc = attr.Description;
-      mthdInfo.IsHidden = attr.IntrospectionMethod | attr.Hidden;
-      // extract parameters information
-      ArrayList parmList = new ArrayList();
-      ParameterInfo[] parms = mi.GetParameters();
-      foreach (ParameterInfo parm in parms)
-      {
-        XmlRpcParameterInfo parmInfo = new XmlRpcParameterInfo();
-        parmInfo.Name = parm.Name;
-        parmInfo.Type = parm.ParameterType;
-        parmInfo.XmlRpcType = GetXmlRpcTypeString(parm.ParameterType);
-        // retrieve optional attributed info
-        parmInfo.Doc = "";
-        XmlRpcParameterAttribute pattr = (XmlRpcParameterAttribute)
-          Attribute.GetCustomAttribute(parm,
-          typeof(XmlRpcParameterAttribute));
-        if (pattr != null)
-        {
-          parmInfo.Doc = pattr.Description;
-          parmInfo.XmlRpcName = pattr.Name;
-        }
-        parmInfo.IsParams = Attribute.IsDefined(parm,
-          typeof(ParamArrayAttribute));
-        parmList.Add(parmInfo);
-      }
-      mthdInfo.Parameters = (XmlRpcParameterInfo[])
-        parmList.ToArray(typeof(XmlRpcParameterInfo));
-      // extract return type information
-      mthdInfo.ReturnType = mi.ReturnType;
-      mthdInfo.ReturnXmlRpcType = GetXmlRpcTypeString(mi.ReturnType);
-      object[] orattrs = mi.ReturnTypeCustomAttributes.GetCustomAttributes(
-        typeof(XmlRpcReturnValueAttribute), false);
-      if (orattrs.Length > 0)
-      {
-        mthdInfo.ReturnDoc = ((XmlRpcReturnValueAttribute)orattrs[0]).Description;
-      }
+		private static void ExtractMethodInfo(Hashtable methods, MethodInfo mi, Type type)
+		{
+			var attr = (XmlRpcMethodAttribute)
+			  Attribute.GetCustomAttribute(mi,
+			  typeof(XmlRpcMethodAttribute));
+			if (attr == null)
+				return;
+			var mthdInfo = new XmlRpcMethodInfo
+			{
+				MethodInfo = mi,
+				XmlRpcName = GetXmlRpcMethodName(mi),
+				MiName = mi.Name,
+				Doc = attr.Description,
+				IsHidden = attr.IntrospectionMethod | attr.Hidden
+			};
+			// extract parameters information
+			var parmList = new ArrayList();
+			var parms = mi.GetParameters();
+			foreach (var parm in parms)
+			{
+				var parmInfo = new XmlRpcParameterInfo
+				{
+					Name = parm.Name,
+					Type = parm.ParameterType,
+					XmlRpcType = GetXmlRpcTypeString(parm.ParameterType),
+					// retrieve optional attributed info
+					Doc = ""
+				};
+				var pattr = (XmlRpcParameterAttribute)
+				  Attribute.GetCustomAttribute(parm,
+				  typeof(XmlRpcParameterAttribute));
+				if (pattr != null)
+				{
+					parmInfo.Doc = pattr.Description;
+					parmInfo.XmlRpcName = pattr.Name;
+				}
+				parmInfo.IsParams = Attribute.IsDefined(parm,
+				  typeof(ParamArrayAttribute));
+				parmList.Add(parmInfo);
+			}
+			mthdInfo.Parameters = (XmlRpcParameterInfo[])
+			  parmList.ToArray(typeof(XmlRpcParameterInfo));
+			// extract return type information
+			mthdInfo.ReturnType = mi.ReturnType;
+			mthdInfo.ReturnXmlRpcType = GetXmlRpcTypeString(mi.ReturnType);
+			var orattrs = mi.ReturnTypeCustomAttributes.GetCustomAttributes(
+			  typeof(XmlRpcReturnValueAttribute), false);
+			if (orattrs.Length > 0)
+			{
+				mthdInfo.ReturnDoc = ((XmlRpcReturnValueAttribute)orattrs[0]).Description;
+			}
 
-      if (methods[mthdInfo.XmlRpcName] != null)
-      {
-        throw new XmlRpcDupXmlRpcMethodNames(String.Format("Method "
-          + "{0} in type {1} has duplicate XmlRpc method name {2}",
-          mi.Name, type.Name, mthdInfo.XmlRpcName));
-      }
-      else
-        methods.Add(mthdInfo.XmlRpcName, mthdInfo);
-    }
+			if (methods[mthdInfo.XmlRpcName] != null)
+			{
+				throw new XmlRpcDupXmlRpcMethodNames(string.Format("Method "
+				  + "{0} in type {1} has duplicate XmlRpc method name {2}",
+				  mi.Name, type.Name, mthdInfo.XmlRpcName));
+			}
+			else
+				methods.Add(mthdInfo.XmlRpcName, mthdInfo);
+		}
 
-    public MethodInfo GetMethodInfo(string xmlRpcMethodName)
-    {
-      foreach (XmlRpcMethodInfo xmi in methodInfos)
-      {
-        if (xmlRpcMethodName == xmi.XmlRpcName)
-        {
-          return xmi.MethodInfo;
-        }
-      }
-      return null;
-    }
+		public MethodInfo GetMethodInfo(string xmlRpcMethodName)
+		{
+			return (from xmi in Methods where xmlRpcMethodName == xmi.XmlRpcName select xmi.MethodInfo).FirstOrDefault();
+		}
 
-    static bool IsVisibleXmlRpcMethod(MethodInfo mi)
-    {
-      bool ret = false;
-      Attribute attr = Attribute.GetCustomAttribute(mi,
-        typeof(XmlRpcMethodAttribute));
-      if (attr != null)
-      {
-        XmlRpcMethodAttribute mattr = (XmlRpcMethodAttribute)attr;
-        ret = !(mattr.Hidden || mattr.IntrospectionMethod == true);
-      }
-      return ret;
-    }
+		public static string GetXmlRpcMethodName(MethodInfo mi)
+		{
+			var attr = (XmlRpcMethodAttribute)
+			  Attribute.GetCustomAttribute(mi,
+			  typeof(XmlRpcMethodAttribute));
+			// ReSharper disable once PossibleNullReferenceException
+			return !string.IsNullOrEmpty(attr?.Method) ? attr.Method : mi.Name;
+		}
 
-    public static string GetXmlRpcMethodName(MethodInfo mi)
-    {
-      XmlRpcMethodAttribute attr = (XmlRpcMethodAttribute)
-        Attribute.GetCustomAttribute(mi,
-        typeof(XmlRpcMethodAttribute));
-      if (attr != null
-        && attr.Method != null
-        && attr.Method != "")
-      {
-        return attr.Method;
-      }
-      else
-      {
-        return mi.Name;
-      }
-    }
+		public string GetMethodName(string xmlRpcMethodName)
+		{
+			return Methods
+				   .Where(mi => mi.XmlRpcName == xmlRpcMethodName)
+				   .Select(mi => mi.MiName)
+				   .FirstOrDefault();
+		}
 
-    public string GetMethodName(string XmlRpcMethodName)
-    {
-      foreach (XmlRpcMethodInfo methodInfo in methodInfos)
-      {
-        if (methodInfo.XmlRpcName == XmlRpcMethodName)
-          return methodInfo.MiName;
-      }
-      return null;
-    }
+		public string Doc { get; set; }
 
-    public String Doc
-    {
-      get { return doc; }
-      set { doc = value; }
-    }
+		public string Name { get; set; }
 
-    public String Name
-    {
-      get { return name; }
-      set { name = value; }
-    }
+		public XmlRpcMethodInfo[] Methods { get; private set; }
 
-    public XmlRpcMethodInfo[] Methods
-    {
-      get { return methodInfos; }
-    }
+		public XmlRpcMethodInfo GetMethod(
+		  string methodName)
+		{
+			return Methods.FirstOrDefault(mthdInfo => mthdInfo.XmlRpcName == methodName);
+		}
 
-    public XmlRpcMethodInfo GetMethod(
-      String methodName)
-    {
-      foreach (XmlRpcMethodInfo mthdInfo in methodInfos)
-      {
-        if (mthdInfo.XmlRpcName == methodName)
-          return mthdInfo;
-      }
-      return null;
-    }
+		private XmlRpcServiceInfo()
+		{
+		}
 
-    private XmlRpcServiceInfo()
-    {
-    }
+		public static XmlRpcType GetXmlRpcType(Type t)
+		{
+			return GetXmlRpcType(t, new Stack());
+		}
 
-    public static XmlRpcType GetXmlRpcType(Type t)
-    {
-      return GetXmlRpcType(t, new Stack());
-    }
-
-    private static XmlRpcType GetXmlRpcType(Type t, Stack typeStack)
-    {
-      XmlRpcType ret;
-      if (t == typeof(Int32))
-        ret = XmlRpcType.tInt32;
-      else if (t == typeof(XmlRpcInt))
-        ret = XmlRpcType.tInt32;
-      else if (t == typeof(Int64))
-        ret = XmlRpcType.tInt64;
-      else if (t == typeof(Boolean))
-        ret = XmlRpcType.tBoolean;
-      else if (t == typeof(XmlRpcBoolean))
-        ret = XmlRpcType.tBoolean;
-      else if (t == typeof(String))
-        ret = XmlRpcType.tString;
-      else if (t == typeof(Double))
-        ret = XmlRpcType.tDouble;
-      else if (t == typeof(XmlRpcDouble))
-        ret = XmlRpcType.tDouble;
-      else if (t == typeof(DateTime))
-        ret = XmlRpcType.tDateTime;
-      else if (t == typeof(XmlRpcDateTime))
-        ret = XmlRpcType.tDateTime;
-      else if (t == typeof(byte[]))
-        ret = XmlRpcType.tBase64;
-      else if (t == typeof(XmlRpcStruct))
-      {
-        ret = XmlRpcType.tHashtable;
-      }
-      else if (t == typeof(Array))
-        ret = XmlRpcType.tArray;
-      else if (t.IsArray)
-      {
+		private static XmlRpcType GetXmlRpcType(Type t, Stack typeStack)
+		{
+			XmlRpcType ret;
+			if (t == typeof(int))
+				ret = XmlRpcType.tInt32;
+			else if (t == typeof(XmlRpcInt))
+				ret = XmlRpcType.tInt32;
+			else if (t == typeof(long))
+				ret = XmlRpcType.tInt64;
+			else if (t == typeof(bool))
+				ret = XmlRpcType.tBoolean;
+			else if (t == typeof(XmlRpcBoolean))
+				ret = XmlRpcType.tBoolean;
+			else if (t == typeof(string))
+				ret = XmlRpcType.tString;
+			else if (t == typeof(double))
+				ret = XmlRpcType.tDouble;
+			else if (t == typeof(XmlRpcDouble))
+				ret = XmlRpcType.tDouble;
+			else if (t == typeof(DateTime))
+				ret = XmlRpcType.tDateTime;
+			else if (t == typeof(XmlRpcDateTime))
+				ret = XmlRpcType.tDateTime;
+			else if (t == typeof(byte[]))
+				ret = XmlRpcType.tBase64;
+			else if (t == typeof(XmlRpcStruct))
+			{
+				ret = XmlRpcType.tHashtable;
+			}
+			else if (t == typeof(Array))
+				ret = XmlRpcType.tArray;
+			else if (t.IsArray)
+			{
 #if (!COMPACT_FRAMEWORK)
-        Type elemType = t.GetElementType();
-        if (elemType != typeof(Object)
-          && GetXmlRpcType(elemType, typeStack) == XmlRpcType.tInvalid)
-        {
-          ret = XmlRpcType.tInvalid;
-        }
-        else
-        {
-          if (t.GetArrayRank() == 1)  // single dim array
-            ret = XmlRpcType.tArray;
-          else
-            ret = XmlRpcType.tMultiDimArray;
-        }
+				var elemType = t.GetElementType();
+				if (elemType != typeof(object)
+				  && GetXmlRpcType(elemType, typeStack) == XmlRpcType.tInvalid)
+				{
+					ret = XmlRpcType.tInvalid;
+				}
+				else
+				{
+					// single dim array
+					ret = t.GetArrayRank() == 1 ? XmlRpcType.tArray : XmlRpcType.tMultiDimArray;
+				}
 #else
         //!! check types of array elements if not Object[]
         Type elemType = null;
@@ -333,118 +291,129 @@ namespace CookComputing.XmlRpc
         }
 #endif
 
-      }
+			}
 #if !FX1_0
-      else if (t == typeof(int?))
-        ret = XmlRpcType.tInt32;
-      else if (t == typeof(long?))
-        ret = XmlRpcType.tInt64;
-      else if (t == typeof(Boolean?))
-        ret = XmlRpcType.tBoolean;
-      else if (t == typeof(Double?))
-        ret = XmlRpcType.tDouble;
-      else if (t == typeof(DateTime?))
-        ret = XmlRpcType.tDateTime;
+			else if (t == typeof(int?))
+				ret = XmlRpcType.tInt32;
+			else if (t == typeof(long?))
+				ret = XmlRpcType.tInt64;
+			else if (t == typeof(bool?))
+				ret = XmlRpcType.tBoolean;
+			else if (t == typeof(double?))
+				ret = XmlRpcType.tDouble;
+			else if (t == typeof(DateTime?))
+				ret = XmlRpcType.tDateTime;
 #endif
-      else if (t == typeof(void))
-      {
-        ret = XmlRpcType.tVoid;
-      }
-      else if ((t.IsValueType && !t.IsPrimitive && !t.IsEnum)
-        || t.IsClass)
-      {
-        // if type is struct or class its only valid for XML-RPC mapping if all 
-        // its members have a valid mapping or are of type object which
-        // maps to any XML-RPC type
-        MemberInfo[] mis = t.GetMembers();
-        foreach (MemberInfo mi in mis)
-        {
-          if (mi.MemberType == MemberTypes.Field)
-          {
-            FieldInfo fi = (FieldInfo)mi;
-            if (typeStack.Contains(fi.FieldType))
-              continue;
-            try
-            {
-              typeStack.Push(fi.FieldType);
-              if ((fi.FieldType != typeof(Object)
-                && GetXmlRpcType(fi.FieldType, typeStack) == XmlRpcType.tInvalid))
-              {
-                return XmlRpcType.tInvalid;
-              }
-            }
-            finally
-            {
-              typeStack.Pop();
-            }
-          }
-          else if (mi.MemberType == MemberTypes.Property)
-          {
-            PropertyInfo pi = (PropertyInfo)mi;
-            if (typeStack.Contains(pi.PropertyType))
-              continue;
-            try
-            {
-              typeStack.Push(pi.PropertyType);
-              if ((pi.PropertyType != typeof(Object)
-                && GetXmlRpcType(pi.PropertyType, typeStack) == XmlRpcType.tInvalid))
-              {
-                return XmlRpcType.tInvalid;
-              }
-            }
-            finally
-            {
-              typeStack.Pop();
-            }
-          }
-        }
-        ret = XmlRpcType.tStruct;
-      }
-      else
-        ret = XmlRpcType.tInvalid;
-      return ret;
-    }
+			else if (t == typeof(void))
+			{
+				ret = XmlRpcType.tVoid;
+			}
+			else if ((t.IsValueType && !t.IsPrimitive && !t.IsEnum)
+			  || t.IsClass)
+			{
+				// if type is struct or class its only valid for XML-RPC mapping if all 
+				// its members have a valid mapping or are of type object which
+				// maps to any XML-RPC type
+				var mis = t.GetMembers();
+				foreach (var mi in mis)
+				{
+					if (mi.MemberType == MemberTypes.Field)
+					{
+						var fi = (FieldInfo)mi;
+						if (typeStack.Contains(fi.FieldType))
+							continue;
+						try
+						{
+							typeStack.Push(fi.FieldType);
+							if ((fi.FieldType != typeof(object)
+							  && GetXmlRpcType(fi.FieldType, typeStack) == XmlRpcType.tInvalid))
+							{
+								return XmlRpcType.tInvalid;
+							}
+						}
+						finally
+						{
+							typeStack.Pop();
+						}
+					}
+					else if (mi.MemberType == MemberTypes.Property)
+					{
+						PropertyInfo pi = (PropertyInfo)mi;
+						if (typeStack.Contains(pi.PropertyType))
+							continue;
+						try
+						{
+							typeStack.Push(pi.PropertyType);
+							if ((pi.PropertyType != typeof(Object)
+							  && GetXmlRpcType(pi.PropertyType, typeStack) == XmlRpcType.tInvalid))
+							{
+								return XmlRpcType.tInvalid;
+							}
+						}
+						finally
+						{
+							typeStack.Pop();
+						}
+					}
+				}
+				ret = XmlRpcType.tStruct;
+			}
+			else
+				ret = XmlRpcType.tInvalid;
+			return ret;
+		}
 
-    static public string GetXmlRpcTypeString(Type t)
-    {
-      XmlRpcType rpcType = GetXmlRpcType(t);
-      return GetXmlRpcTypeString(rpcType);
-    }
+		public static string GetXmlRpcTypeString(Type t)
+		{
+			var rpcType = GetXmlRpcType(t);
+			return GetXmlRpcTypeString(rpcType);
+		}
 
-    static public string GetXmlRpcTypeString(XmlRpcType t)
-    {
-      string ret = null;
-      if (t == XmlRpcType.tInt32)
-        ret = "integer";
-      else if (t == XmlRpcType.tInt64)
-        ret = "i8";
-      else if (t == XmlRpcType.tBoolean)
-        ret = "boolean";
-      else if (t == XmlRpcType.tString)
-        ret = "string";
-      else if (t == XmlRpcType.tDouble)
-        ret = "double";
-      else if (t == XmlRpcType.tDateTime)
-        ret = "dateTime";
-      else if (t == XmlRpcType.tBase64)
-        ret = "base64";
-      else if (t == XmlRpcType.tStruct)
-        ret = "struct";
-      else if (t == XmlRpcType.tHashtable)
-        ret = "struct";
-      else if (t == XmlRpcType.tArray)
-        ret = "array";
-      else if (t == XmlRpcType.tMultiDimArray)
-        ret = "array";
-      else if (t == XmlRpcType.tVoid)
-        ret = "void";
-      else
-        ret = null;
-      return ret;
-    }
-
-    XmlRpcMethodInfo[] methodInfos;
-    String doc;
-    string name;
-  }
+		public static string GetXmlRpcTypeString(XmlRpcType t)
+		{
+			string ret;
+			switch (t) {
+				case XmlRpcType.tInt32:
+					ret = "integer";
+					break;
+				case XmlRpcType.tInt64:
+					ret = "i8";
+					break;
+				case XmlRpcType.tBoolean:
+					ret = "boolean";
+					break;
+				case XmlRpcType.tString:
+					ret = "string";
+					break;
+				case XmlRpcType.tDouble:
+					ret = "double";
+					break;
+				case XmlRpcType.tDateTime:
+					ret = "dateTime";
+					break;
+				case XmlRpcType.tBase64:
+					ret = "base64";
+					break;
+				case XmlRpcType.tStruct:
+					ret = "struct";
+					break;
+				case XmlRpcType.tHashtable:
+					ret = "struct";
+					break;
+				case XmlRpcType.tArray:
+					ret = "array";
+					break;
+				case XmlRpcType.tMultiDimArray:
+					ret = "array";
+					break;
+				case XmlRpcType.tVoid:
+					ret = "void";
+					break;
+				default:
+					ret = null;
+					break;
+			}
+			return ret;
+		}
+	}
 }
