@@ -541,7 +541,7 @@ namespace CookComputing.XmlRpc
 				if (rpcMethod == "")
 				{
 					if (!MethodName.StartsWith("Begin") || MethodName.Length <= 5)
-						throw new Exception(String.Format(
+						throw new Exception(string.Format(
 						  "method {0} has invalid signature for begin method",
 						  MethodName));
 					rpcMethod = MethodName.Substring(5);

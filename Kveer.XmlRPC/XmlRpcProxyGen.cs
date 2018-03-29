@@ -524,7 +524,7 @@ namespace CookComputing.XmlRpc
         if (rpcMethod == "")
         {
           if (!mi.Name.StartsWith("Begin") || mi.Name.Length <= 5)
-            throw new Exception(String.Format(
+            throw new Exception(string.Format(
               "method {0} has invalid signature for begin method",
               mi.Name));
           rpcMethod = mi.Name.Substring(5);
@@ -540,13 +540,13 @@ namespace CookComputing.XmlRpc
         if (paramCount > 1)
         {
           if (i < paramCount - 2)
-            throw new Exception(String.Format(
+            throw new Exception(string.Format(
               "method {0} has invalid signature for begin method", mi.Name));
           if (i == (paramCount - 2))
           {
             Type paramType = mi.GetParameters()[i + 1].ParameterType;
             if (paramType != typeof(System.Object))
-              throw new Exception(String.Format(
+              throw new Exception(string.Format(
                 "method {0} has invalid signature for begin method",
                 mi.Name));
           }
@@ -569,11 +569,11 @@ namespace CookComputing.XmlRpc
           continue;
         ParameterInfo[] pis = mi.GetParameters();
         if (pis.Length != 1)
-          throw new Exception(String.Format(
+          throw new Exception(string.Format(
             "method {0} has invalid signature for end method", mi.Name));
         Type paramType = pis[0].ParameterType;
         if (paramType != typeof(System.IAsyncResult))
-          throw new Exception(String.Format(
+          throw new Exception(string.Format(
             "method {0} has invalid signature for end method", mi.Name));
         ret.Add(new MethodData(mi, "", false));
       }

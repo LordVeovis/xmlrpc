@@ -23,62 +23,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
+	public class XmlRpcParameterInfo
+	{
+		private string _name;
 
-  public class XmlRpcParameterInfo
-  {
-    public XmlRpcParameterInfo()
-    {
-    }
+		public string Doc { get; set; }
 
-    public String Doc
-    {
-      get { return doc; }
-      set { doc = value; }
-    }
+		public bool IsParams { get; set; }
 
-    public bool IsParams
-    {
-      get { return isparams; }
-      set { isparams = value; }
-    }
+		public string Name
+		{
+			get => _name;
+			set {
+				_name = value;
+				if (XmlRpcName == "")
+					XmlRpcName = _name;
+			}
+		}
 
-    public String Name
-    {
-      get { return name; }
-      set 
-      { 
-        name = value; 
-        if (xmlRpcName == "")
-          xmlRpcName = name;
-      }
-    }
+		public string XmlRpcName { get; set; }
 
-    public String XmlRpcName
-    {
-      get { return xmlRpcName; }
-      set { xmlRpcName = value; }
-    }
+		public Type Type { get; set; }
 
-    public Type Type
-    {
-      get { return type; }
-      set { type = value; }
-    }
-
-    public string XmlRpcType
-    {
-      get { return xmlRpcType; }
-      set { xmlRpcType = value; }
-    }
-
-    string doc;
-    string name;
-    Type type;
-    string xmlRpcName;
-    string xmlRpcType;
-    bool isparams;
-  }
+		public string XmlRpcType { get; set; }
+	}
 }

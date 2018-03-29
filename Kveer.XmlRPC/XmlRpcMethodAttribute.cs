@@ -23,50 +23,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
+	[AttributeUsage(AttributeTargets.Method)]
+	public class XmlRpcMethodAttribute : Attribute
+	{
+		public string Description = "";
+		public bool   Hidden      = false;
 
-  [AttributeUsage(AttributeTargets.Method)]
-  public class XmlRpcMethodAttribute : Attribute
-  {
-    public XmlRpcMethodAttribute()
-    {
-    }
+		public XmlRpcMethodAttribute() { }
 
-    public XmlRpcMethodAttribute(string method)
-    {
-      this.method = method;
-    }
+		public XmlRpcMethodAttribute(string method)
+		{
+			Method = method;
+		}
 
-    public string Method 
-    {
-      get 
-      { return method; }
-    }
+		public string Method { get; } = "";
 
-    public bool IntrospectionMethod 
-    {
-      get { return introspectionMethod; }
-      set { introspectionMethod = value; }
-    }
+		public bool IntrospectionMethod { get; set; } = false;
 
-    public bool StructParams
-    {
-      get { return structParams; }
-      set { structParams = value; }
-    }
+		public bool StructParams { get; set; } = false;
 
-    public override string ToString()
-    {
-      string value = "Method : " + method;
-      return value;
-    }
-
-    public string Description = "";
-    public bool Hidden = false;
-    private string method = "";
-    private bool introspectionMethod = false;
-    private bool structParams = false;
-  }
+		public override string ToString()
+		{
+			var value = "Method : " + Method;
+			return value;
+		}
+	}
 }

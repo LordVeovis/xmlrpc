@@ -23,26 +23,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
+	[AttributeUsage(AttributeTargets.ReturnValue)]
+	public class XmlRpcReturnValueAttribute : Attribute
+	{
+		public string Description { get; set; } = "";
 
-  [AttributeUsage(AttributeTargets.ReturnValue)]
-  public class XmlRpcReturnValueAttribute : Attribute
-  {
-    public XmlRpcReturnValueAttribute()
-    {
-    }
-    public string Description 
-    {
-      get { return description; }
-      set { description = value; }
-    }
-    public override string ToString()
-    {
-      string value = "Description : " + description;
-      return value;
-    }
-    private string description = "";
-  }
+		public override string ToString()
+		{
+			var value = "Description : " + Description;
+			return value;
+		}
+	}
 }

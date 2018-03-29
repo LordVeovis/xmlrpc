@@ -97,7 +97,7 @@ namespace CookComputing.XmlRpc
 		// private properties
 		bool AllowInvalidHTTPContent
 		{
-			get { return (m_nonStandard & XmlRpcNonStandard.AllowInvalidHTTPContent) != 0; }
+			get { return (m_nonStandard & XmlRpcNonStandard.AllowInvalidHttpContent) != 0; }
 		}
 
 		bool AllowNonStandardDateTime

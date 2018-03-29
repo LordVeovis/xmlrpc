@@ -23,214 +23,211 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
+	public class XmlRpcException : ApplicationException
+	{
+		public XmlRpcException() { }
 
-  public class XmlRpcException : ApplicationException
-  {
-    public XmlRpcException() {}
+		public XmlRpcException(string msg)
+			: base(msg) { }
 
-    public XmlRpcException(string msg)
-      : base(msg) {}
+		public XmlRpcException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+	public class XmlRpcUnsupportedTypeException : XmlRpcException
+	{
+		public XmlRpcUnsupportedTypeException(Type t)
+			: base(string.Format("Unable to map type {0} onto XML-RPC type", t))
+		{
+			UnsupportedType = t;
+		}
 
-  public class XmlRpcUnsupportedTypeException : XmlRpcException
-  {
-    Type _unsupportedType;
+		public XmlRpcUnsupportedTypeException(Type t, string msg)
+			: base(msg)
+		{
+			UnsupportedType = t;
+		}
 
-    public XmlRpcUnsupportedTypeException(Type t)
-      : base(string.Format("Unable to map type {0} onto XML-RPC type", t)) 
-    {
-      _unsupportedType = t;
-    }
+		public XmlRpcUnsupportedTypeException(Type t, string msg, Exception innerEx)
+			: base(msg, innerEx)
+		{
+			UnsupportedType = t;
+		}
 
-    public XmlRpcUnsupportedTypeException(Type t, string msg)
-      : base(msg) 
-    {
-      _unsupportedType = t;
-    }
+		public Type UnsupportedType { get; }
+	}
 
-    public XmlRpcUnsupportedTypeException(Type t, string msg, Exception innerEx)
-      : base(msg, innerEx)
-    {
-      _unsupportedType = t;
-    }
+	public class XmlRpcUnexpectedTypeException : XmlRpcException
+	{
+		public XmlRpcUnexpectedTypeException() { }
 
-    public Type UnsupportedType { get { return _unsupportedType; } }
-  }
+		public XmlRpcUnexpectedTypeException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcUnexpectedTypeException : XmlRpcException
-  {
-    public XmlRpcUnexpectedTypeException() {}
+		public XmlRpcUnexpectedTypeException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcUnexpectedTypeException(string msg)
-      : base(msg) {}
+	public class XmlRpcIllFormedXmlException : XmlRpcException
+	{
+		public XmlRpcIllFormedXmlException() { }
 
-    public XmlRpcUnexpectedTypeException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
-  
-  public class XmlRpcIllFormedXmlException : XmlRpcException
-  {
-    public XmlRpcIllFormedXmlException() {}
+		public XmlRpcIllFormedXmlException(string msg)
+			: base(msg) { }
 
-    public XmlRpcIllFormedXmlException(string msg)
-      : base(msg) {}
+		public XmlRpcIllFormedXmlException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcIllFormedXmlException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
-  
-  public class XmlRpcUnsupportedMethodException : XmlRpcException
-  {
-    public XmlRpcUnsupportedMethodException() {}
+	public class XmlRpcUnsupportedMethodException : XmlRpcException
+	{
+		public XmlRpcUnsupportedMethodException() { }
 
-    public XmlRpcUnsupportedMethodException(string msg)
-      : base(msg) {}
+		public XmlRpcUnsupportedMethodException(string msg)
+			: base(msg) { }
 
-    public XmlRpcUnsupportedMethodException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
- 
-  public class XmlRpcInvalidParametersException : XmlRpcException
-  {
-    public XmlRpcInvalidParametersException() {}
+		public XmlRpcUnsupportedMethodException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcInvalidParametersException(string msg)
-      : base(msg) {}
+	public class XmlRpcInvalidParametersException : XmlRpcException
+	{
+		public XmlRpcInvalidParametersException() { }
 
-    public XmlRpcInvalidParametersException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcInvalidParametersException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcNonRegularArrayException : XmlRpcException
-  {
-    public XmlRpcNonRegularArrayException() {}
+		public XmlRpcInvalidParametersException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcNonRegularArrayException(string msg)
-      : base(msg) {}
+	public class XmlRpcNonRegularArrayException : XmlRpcException
+	{
+		public XmlRpcNonRegularArrayException() { }
 
-    public XmlRpcNonRegularArrayException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcNonRegularArrayException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcInvalidXmlRpcException : XmlRpcException
-  {
-    public XmlRpcInvalidXmlRpcException() {}
+		public XmlRpcNonRegularArrayException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcInvalidXmlRpcException(string msg)
-      : base(msg) {}
+	public class XmlRpcInvalidXmlRpcException : XmlRpcException
+	{
+		public XmlRpcInvalidXmlRpcException() { }
 
-    public XmlRpcInvalidXmlRpcException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcInvalidXmlRpcException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcMethodAttributeException : XmlRpcException
-  {
-    public XmlRpcMethodAttributeException() {}
+		public XmlRpcInvalidXmlRpcException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcMethodAttributeException(string msg)
-      : base(msg) {}
+	public class XmlRpcMethodAttributeException : XmlRpcException
+	{
+		public XmlRpcMethodAttributeException() { }
 
-    public XmlRpcMethodAttributeException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcMethodAttributeException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcTypeMismatchException : XmlRpcException
-  {
-    public XmlRpcTypeMismatchException() {}
+		public XmlRpcMethodAttributeException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcTypeMismatchException(string msg)
-      : base(msg) {}
+	public class XmlRpcTypeMismatchException : XmlRpcException
+	{
+		public XmlRpcTypeMismatchException() { }
 
-    public XmlRpcTypeMismatchException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcTypeMismatchException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcNullReferenceException : XmlRpcException
-  {
-    public XmlRpcNullReferenceException() {}
+		public XmlRpcTypeMismatchException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcNullReferenceException(string msg)
-      : base(msg) {}
+	public class XmlRpcNullReferenceException : XmlRpcException
+	{
+		public XmlRpcNullReferenceException() { }
 
-    public XmlRpcNullReferenceException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcNullReferenceException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcServerException : XmlRpcException
-  {
-    public XmlRpcServerException() {}
+		public XmlRpcNullReferenceException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcServerException(string msg)
-      : base(msg) {}
+	public class XmlRpcServerException : XmlRpcException
+	{
+		public XmlRpcServerException() { }
 
-    public XmlRpcServerException(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcServerException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcInvalidReturnType : XmlRpcException
-  {
-    public XmlRpcInvalidReturnType() {}
+		public XmlRpcServerException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcInvalidReturnType(string msg)
-      : base(msg) {}
+	public class XmlRpcInvalidReturnType : XmlRpcException
+	{
+		public XmlRpcInvalidReturnType() { }
 
-    public XmlRpcInvalidReturnType(string msg, Exception innerEx)
-      : base(msg, innerEx){}
-  }
+		public XmlRpcInvalidReturnType(string msg)
+			: base(msg) { }
 
-  public class XmlRpcMappingSerializeException : XmlRpcException
-  {
-    public XmlRpcMappingSerializeException() { }
+		public XmlRpcInvalidReturnType(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcMappingSerializeException(string msg)
-      : base(msg) { }
+	public class XmlRpcMappingSerializeException : XmlRpcException
+	{
+		public XmlRpcMappingSerializeException() { }
 
-    public XmlRpcMappingSerializeException(string msg, Exception innerEx)
-      : base(msg, innerEx) { }
-  }
+		public XmlRpcMappingSerializeException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcNullParameterException : XmlRpcException
-  {
-    public XmlRpcNullParameterException() { }
+		public XmlRpcMappingSerializeException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcNullParameterException(string msg)
-      : base(msg) { }
+	public class XmlRpcNullParameterException : XmlRpcException
+	{
+		public XmlRpcNullParameterException() { }
 
-    public XmlRpcNullParameterException(string msg, Exception innerEx)
-      : base(msg, innerEx) { }
-  }
+		public XmlRpcNullParameterException(string msg)
+			: base(msg) { }
 
-  public class XmlRpcMissingUrl : XmlRpcException
-  {
-    public XmlRpcMissingUrl() { }
+		public XmlRpcNullParameterException(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 
-    public XmlRpcMissingUrl(string msg)
-      : base(msg) { }
-  }
+	public class XmlRpcMissingUrl : XmlRpcException
+	{
+		public XmlRpcMissingUrl() { }
 
-  public class XmlRpcDupXmlRpcMethodNames : XmlRpcException
-  {
-    public XmlRpcDupXmlRpcMethodNames() { }
+		public XmlRpcMissingUrl(string msg)
+			: base(msg) { }
+	}
 
-    public XmlRpcDupXmlRpcMethodNames(string msg)
-      : base(msg) { }
-  }
+	public class XmlRpcDupXmlRpcMethodNames : XmlRpcException
+	{
+		public XmlRpcDupXmlRpcMethodNames() { }
 
-  public class XmlRpcNonSerializedMember : XmlRpcException
-  {
-    public XmlRpcNonSerializedMember() { }
+		public XmlRpcDupXmlRpcMethodNames(string msg)
+			: base(msg) { }
+	}
 
-    public XmlRpcNonSerializedMember(string msg)
-      : base(msg) { }
+	public class XmlRpcNonSerializedMember : XmlRpcException
+	{
+		public XmlRpcNonSerializedMember() { }
 
-    public XmlRpcNonSerializedMember(string msg, Exception innerEx)
-      : base(msg, innerEx) { }
-  }
+		public XmlRpcNonSerializedMember(string msg)
+			: base(msg) { }
 
+		public XmlRpcNonSerializedMember(string msg, Exception innerEx)
+			: base(msg, innerEx) { }
+	}
 }

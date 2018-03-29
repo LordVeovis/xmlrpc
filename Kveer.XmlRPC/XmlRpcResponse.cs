@@ -25,17 +25,18 @@ DEALINGS IN THE SOFTWARE.
 
 namespace CookComputing.XmlRpc
 {
-  using System;
-  public class XmlRpcResponse
-  {	
-    public XmlRpcResponse()
-    {
-      retVal = null;
-    }
-    public XmlRpcResponse(object retValue)
-    {
-      retVal = retValue;
-    }
-    public Object retVal;
-  }    
+	public class XmlRpcResponse
+	{
+		public object retVal;
+
+		public XmlRpcResponse()
+		{
+			retVal = null;
+		}
+
+		public XmlRpcResponse(object retValue)
+		{
+			retVal = retValue;
+		}
+	}
 }

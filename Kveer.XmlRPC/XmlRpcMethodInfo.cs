@@ -23,85 +23,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+using System.Reflection;
+
 namespace CookComputing.XmlRpc
 {
-  using System;
-  using System.Reflection;
+	public class XmlRpcMethodInfo : IComparable
+	{
+		public bool IsHidden { get; set; }
 
-  public class XmlRpcMethodInfo : IComparable
-  {
-    public XmlRpcMethodInfo()
-    {
-    }
+		public string Doc { get; set; } = "";
 
-    public bool IsHidden
-    {
-      get { return isHidden; }
-      set { isHidden = value; }
-    }
+		public MethodInfo MethodInfo { get; set; }
 
-    public String Doc
-    {
-      get { return doc; }
-      set { doc = value; }
-    }
+		public string MiName { get; set; } = "";
 
-    public MethodInfo MethodInfo
-    {
-      get { return mi; }
-      set { mi = value; }
-    }
+		public XmlRpcParameterInfo[] Parameters { get; set; }
 
-    public String MiName
-    {
-      get { return name; }
-      set { name = value; }
-    }
+		public Type ReturnType { get; set; }
 
-    public XmlRpcParameterInfo[] Parameters
-    {
-      get { return paramInfos; }
-      set { paramInfos = value; }
-    }
+		public string ReturnXmlRpcType { get; set; }
 
-    public Type ReturnType
-    {
-      get { return returnType; }
-      set { returnType = value; }
-    }
+		public string ReturnDoc { get; set; } = "";
 
-    public string ReturnXmlRpcType
-    {
-      get { return returnXmlRpcType; }
-      set { returnXmlRpcType = value; }
-    }
+		public string XmlRpcName { get; set; } = "";
 
-    public String ReturnDoc
-    {
-      get { return returnDoc; }
-      set { returnDoc = value; }
-    }
-
-    public String XmlRpcName
-    {
-      get { return xmlRpcName; }
-      set { xmlRpcName = value; }
-    }
-
-    public int CompareTo(object obj)
-    {
-      XmlRpcMethodInfo xmi = (XmlRpcMethodInfo)obj;
-      return this.xmlRpcName.CompareTo(xmi.xmlRpcName);
-    }
-
-    MethodInfo mi;
-    bool isHidden;
-    string doc="";
-    string name="";
-    string xmlRpcName="";
-    string returnDoc="";
-    Type returnType;
-    string returnXmlRpcType;
-    XmlRpcParameterInfo[] paramInfos;
-  }  
+		public int CompareTo(object obj)
+		{
+			var xmi = (XmlRpcMethodInfo) obj;
+			return XmlRpcName.CompareTo(xmi.XmlRpcName);
+		}
+	}
 }
