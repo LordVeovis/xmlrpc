@@ -50,8 +50,7 @@ namespace CookComputing.XmlRpc
 			bool useStringTag,
 			WebRequest request,
 			AsyncCallback userCallback,
-			object userAsyncState,
-			int retryNumber)
+			object userAsyncState)
 		{
 			XmlRpcRequest          = xmlRpcReq;
 			ClientProtocol         = clientProtocol;

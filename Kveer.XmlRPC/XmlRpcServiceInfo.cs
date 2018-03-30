@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CookComputing.XmlRpc
@@ -127,7 +128,7 @@ namespace CookComputing.XmlRpc
 				IsHidden = attr.IntrospectionMethod | attr.Hidden
 			};
 			// extract parameters information
-			var parmList = new ArrayList();
+			var parmList = new List<XmlRpcParameterInfo>();
 			var parms = mi.GetParameters();
 			foreach (var parm in parms)
 			{
@@ -151,8 +152,7 @@ namespace CookComputing.XmlRpc
 				  typeof(ParamArrayAttribute));
 				parmList.Add(parmInfo);
 			}
-			mthdInfo.Parameters = (XmlRpcParameterInfo[])
-			  parmList.ToArray(typeof(XmlRpcParameterInfo));
+			mthdInfo.Parameters = parmList.ToArray();
 			// extract return type information
 			mthdInfo.ReturnType = mi.ReturnType;
 			mthdInfo.ReturnXmlRpcType = GetXmlRpcTypeString(mi.ReturnType);

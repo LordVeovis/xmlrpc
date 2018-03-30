@@ -590,7 +590,7 @@ namespace CookComputing.XmlRpc
 				}
 				else if (node.Name == "base64")
 				{
-					retObj = ParseBase64(node, valType, parseStack, mappingAction);
+					retObj = ParseBase64(node, valType, parseStack);
 				}
 				else if (node.Name == "struct")
 				{
@@ -606,43 +606,43 @@ namespace CookComputing.XmlRpc
 						if (valType == null || valType == typeof(object))
 							valType = typeof(XmlRpcStruct);
 						// TODO: do we need to validate type here?
-						retObj = ParseHashtable(node, valType, parseStack, mappingAction);
+						retObj = ParseHashtable(node, parseStack, mappingAction);
 					}
 				}
 				else if (node.Name == "i4" // integer has two representations in XML-RPC spec
 						 || node.Name == "int")
 				{
-					retObj = ParseInt(node, valType, parseStack, mappingAction);
+					retObj = ParseInt(node, valType, parseStack);
 					parsedType = typeof(int);
 					parsedArrayType = typeof(int[]);
 				}
 				else if (node.Name == "i8")
 				{
-					retObj = ParseLong(node, valType, parseStack, mappingAction);
+					retObj = ParseLong(node, valType, parseStack);
 					parsedType = typeof(long);
 					parsedArrayType = typeof(long[]);
 				}
 				else if (node.Name == "string")
 				{
-					retObj = ParseString(node, valType, parseStack, mappingAction);
+					retObj = ParseString(node, valType, parseStack);
 					parsedType = typeof(string);
 					parsedArrayType = typeof(string[]);
 				}
 				else if (node.Name == "boolean")
 				{
-					retObj = ParseBoolean(node, valType, parseStack, mappingAction);
+					retObj = ParseBoolean(node, valType, parseStack);
 					parsedType = typeof(bool);
 					parsedArrayType = typeof(bool[]);
 				}
 				else if (node.Name == "double")
 				{
-					retObj = ParseDouble(node, valType, parseStack, mappingAction);
+					retObj = ParseDouble(node, valType, parseStack);
 					parsedType = typeof(double);
 					parsedArrayType = typeof(double[]);
 				}
 				else if (node.Name == "dateTime.iso8601")
 				{
-					retObj = ParseDateTime(node, valType, parseStack, mappingAction);
+					retObj = ParseDateTime(node, valType, parseStack);
 					parsedType = typeof(DateTime);
 					parsedArrayType = typeof(DateTime[]);
 				}
@@ -723,10 +723,8 @@ namespace CookComputing.XmlRpc
 			{
 				parseStack.Push(string.Format("element {0}", i));
 				var vvNode = SelectValueNode(vNode);
-				Type parsedType;
-				Type parsedArrayType;
 				elements[i++] = ParseValue(vvNode, elemType, parseStack, mappingAction,
-										   out parsedType, out parsedArrayType);
+										   out _, out var parsedArrayType);
 				if (bGotType == false)
 				{
 					useType = parsedArrayType;
@@ -752,7 +750,7 @@ namespace CookComputing.XmlRpc
 			}
 			else
 			{
-				retObj = CreateArrayInstance(useType == null ? typeof(object[]) : useType, args);
+				retObj = CreateArrayInstance(useType ?? typeof(object[]), args);
 			}
 
 			for (var j = 0; j < elements.Length; j++) ((Array)retObj).SetValue(elements[j], j);
@@ -807,7 +805,7 @@ namespace CookComputing.XmlRpc
 			return ret;
 		}
 
-		private void ParseMultiDimElements(XmlNode node, int rank, int CurRank,
+		private void ParseMultiDimElements(XmlNode node, int rank, int curRank,
 										   Type elemType, IList elements, IList<int> dimLengths,
 										   ParseStack parseStack, MappingAction mappingAction)
 		{
@@ -818,15 +816,15 @@ namespace CookComputing.XmlRpc
 			var childNodes = SelectNodes(dataNode, "value");
 			var nodeCount = childNodes.Length;
 			//!! check that multi dim array is not jagged
-			if (dimLengths[CurRank] != 0 && nodeCount != dimLengths[CurRank])
+			if (dimLengths[curRank] != 0 && nodeCount != dimLengths[curRank])
 				throw new XmlRpcNonRegularArrayException(
 					"Multi-dimensional array must not be jagged.");
-			dimLengths[CurRank] = nodeCount; // in case first array at this rank
-			if (CurRank < rank - 1)
+			dimLengths[curRank] = nodeCount; // in case first array at this rank
+			if (curRank < rank - 1)
 				foreach (var vNode in childNodes)
 				{
 					var arrayNode = SelectSingleNode(vNode, "array");
-					ParseMultiDimElements(arrayNode, rank, CurRank + 1, elemType,
+					ParseMultiDimElements(arrayNode, rank, curRank + 1, elemType,
 										  elements, dimLengths, parseStack, mappingAction);
 				}
 			else
@@ -885,7 +883,7 @@ namespace CookComputing.XmlRpc
 			// create map of field names and remove each name from it as 
 			// processed so we can determine which fields are missing
 			// TODO: replace HashTable with lighter collection
-			var names = new Hashtable();
+			var names = new Dictionary<string,string>();
 			foreach (var fi in valueType.GetFields())
 			{
 				if (Attribute.IsDefined(fi, typeof(NonSerializedAttribute)))
@@ -932,7 +930,7 @@ namespace CookComputing.XmlRpc
 					mi = valueType.GetProperty(name);
 				if (mi == null)
 					continue;
-				if (names.Contains(name))
+				if (names.ContainsKey(name))
 				{
 					names.Remove(name);
 				}
@@ -1113,12 +1111,11 @@ namespace CookComputing.XmlRpc
 													typeof(XmlRpcMissingMappingAttribute));
 			}
 
-			return attr != null ? ((XmlRpcMissingMappingAttribute)attr).Action : currentAction;
+			return ((XmlRpcMissingMappingAttribute) attr)?.Action ?? currentAction;
 		}
 
 		private object ParseHashtable(
 			XmlNode node,
-			Type valueType,
 			ParseStack parseStack,
 			MappingAction mappingAction)
 		{
@@ -1185,8 +1182,7 @@ namespace CookComputing.XmlRpc
 		private object ParseInt(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(object)
 								  && valueType != typeof(int)
@@ -1230,8 +1226,7 @@ namespace CookComputing.XmlRpc
 		private object ParseLong(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(object)
 								  && valueType != typeof(long)
@@ -1273,8 +1268,7 @@ namespace CookComputing.XmlRpc
 		private object ParseString(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(string)
 								  && valueType != typeof(object))
@@ -1299,8 +1293,7 @@ namespace CookComputing.XmlRpc
 		private object ParseBoolean(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(object)
 								  && valueType != typeof(bool)
@@ -1339,8 +1332,7 @@ namespace CookComputing.XmlRpc
 		private object ParseDouble(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(object)
 								  && valueType != typeof(double)
@@ -1377,8 +1369,7 @@ namespace CookComputing.XmlRpc
 		private object ParseDateTime(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(object)
 								  && valueType != typeof(DateTime)
@@ -1431,8 +1422,7 @@ namespace CookComputing.XmlRpc
 		private object ParseBase64(
 			XmlNode node,
 			Type valueType,
-			ParseStack parseStack,
-			MappingAction mappingAction)
+			ParseStack parseStack)
 		{
 			if (valueType != null && valueType != typeof(byte[])
 								  && valueType != typeof(object))
@@ -1588,13 +1578,11 @@ namespace CookComputing.XmlRpc
 		{
 			// an XML-RPC value is either held as the child node of a <value> element
 			// or is just the text of the value node as an implicit string value
-			var vvNode = SelectSingleNode(valueNode, "*");
-			if (vvNode == null)
-				vvNode = valueNode.FirstChild;
+			var vvNode = SelectSingleNode(valueNode, "*") ?? valueNode.FirstChild;
 			return vvNode;
 		}
 
-		private void SelectTwoNodes(XmlNode node, string name1, out XmlNode node1,
+		private static void SelectTwoNodes(XmlNode node, string name1, out XmlNode node1,
 									out bool dup1, string name2, out XmlNode node2, out bool dup2)
 		{
 			node1 = node2 = null;

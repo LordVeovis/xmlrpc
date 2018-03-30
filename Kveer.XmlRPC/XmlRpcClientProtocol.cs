@@ -95,7 +95,7 @@ namespace CookComputing.XmlRpc
 				var useUrl = GetEffectiveUrl(clientObj);
 				webReq = GetWebRequest(new Uri(useUrl));
 				var req = MakeXmlRpcRequest(webReq, mi, parameters,
-				  clientObj, XmlRpcMethod, Id);
+				  XmlRpcMethod, Id);
 				SetProperties(webReq);
 				SetRequestHeaders(Headers, webReq);
 #if (!COMPACT_FRAMEWORK)
@@ -315,13 +315,13 @@ namespace CookComputing.XmlRpc
 			}
 		}
 #endif
-		XmlRpcRequest MakeXmlRpcRequest(WebRequest webReq, MethodInfo mi,
-		  object[] parameters, object clientObj, string xmlRpcMethod,
+		private static XmlRpcRequest MakeXmlRpcRequest(WebRequest webReq, MethodInfo mi,
+		  object[] parameters, string xmlRpcMethod,
 		  Guid proxyId)
 		{
 			webReq.Method = "POST";
 			webReq.ContentType = "text/xml";
-			string rpcMethodName = GetRpcMethodName(clientObj, mi);
+			string rpcMethodName = GetRpcMethodName(mi);
 			XmlRpcRequest req = new XmlRpcRequest(rpcMethodName, parameters, mi,
 			  xmlRpcMethod, proxyId);
 			return req;
@@ -344,8 +344,8 @@ namespace CookComputing.XmlRpc
 				else
 					throw new XmlRpcServerException(httpResp.StatusDescription);
 			}
-			XmlRpcSerializer serializer = new XmlRpcSerializer();
-			serializer.NonStandard = NonStandard;
+
+			XmlRpcSerializer serializer = new XmlRpcSerializer {NonStandard = NonStandard};
 			Type retType = returnType;
 			if (retType == null)
 				retType = req.mi.ReturnType;
@@ -391,7 +391,7 @@ namespace CookComputing.XmlRpc
 			return mi;
 		}
 
-		private static string GetRpcMethodName(object clientObj, MethodInfo mi)
+		private static string GetRpcMethodName(MethodInfo mi)
 		{
 			string rpcMethod;
 			var methodName = mi.Name;
@@ -467,7 +467,7 @@ namespace CookComputing.XmlRpc
 			string useUrl = GetEffectiveUrl(clientObj);
 			WebRequest webReq = GetWebRequest(new Uri(useUrl));
 			XmlRpcRequest xmlRpcReq = MakeXmlRpcRequest(webReq, mi,
-			  parameters, clientObj, XmlRpcMethod, Id);
+			  parameters, XmlRpcMethod, Id);
 			SetProperties(webReq);
 			SetRequestHeaders(Headers, webReq);
 #if (!COMPACT_FRAMEWORK)
@@ -478,7 +478,7 @@ namespace CookComputing.XmlRpc
 				useEncoding = XmlEncoding;
 			XmlRpcAsyncResult asr = new XmlRpcAsyncResult(this, xmlRpcReq,
 			  useEncoding, UseEmptyParamsTag, UseIndentation, Indentation,
-			  UseIntTag, UseStringTag, webReq, callback, outerAsyncState, 0);
+			  UseIntTag, UseStringTag, webReq, callback, outerAsyncState);
 			webReq.BeginGetRequestStream(GetRequestStreamCallback,
 			  asr);
 			if (!asr.IsCompleted)
@@ -541,7 +541,7 @@ namespace CookComputing.XmlRpc
 
 		static void GetResponseCallback(IAsyncResult asyncResult)
 		{
-			XmlRpcAsyncResult result = (XmlRpcAsyncResult)asyncResult.AsyncState;
+			var result = (XmlRpcAsyncResult)asyncResult.AsyncState;
 			result.CompletedSynchronously = asyncResult.CompletedSynchronously;
 			try
 			{

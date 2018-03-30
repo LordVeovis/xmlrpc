@@ -28,13 +28,13 @@ using System.Collections.Generic;
 namespace CookComputing.XmlRpc
 {
 	using System;
-	using System.Collections;
+	using System.Linq;
 	using System.Reflection;
 	using System.Reflection.Emit;
 
 	public class XmlRpcProxyGen
 	{
-		static Hashtable _types = new Hashtable();
+		static readonly IDictionary<Type, Type> s_types = new Dictionary<Type,Type>();
 
 #if (!FX1_0)
 		public static T Create<T>()
@@ -49,20 +49,19 @@ namespace CookComputing.XmlRpc
 			Type proxyType;
 			lock (typeof(XmlRpcProxyGen))
 			{
-				proxyType = (Type)_types[itf];
+				proxyType = s_types[itf];
 				if (proxyType == null)
 				{
 					Guid guid = Guid.NewGuid();
-					string assemblyName = "XmlRpcProxy" + guid.ToString();
-					string moduleName = "XmlRpcProxy" + guid.ToString() + ".dll";
-					string typeName = "XmlRpcProxy" + guid.ToString();
+					string assemblyName = "XmlRpcProxy" + guid;
+					string typeName = "XmlRpcProxy" + guid;
 					AssemblyBuilder assBldr = BuildAssembly(itf, assemblyName,
-					  moduleName, typeName, AssemblyBuilderAccess.Run);
+					   typeName, AssemblyBuilderAccess.Run);
 					proxyType = assBldr.GetType(typeName);
-					_types.Add(itf, proxyType);
+					s_types.Add(itf, proxyType);
 				}
 			}
-			object ret = Activator.CreateInstance(proxyType);
+			var ret = Activator.CreateInstance(proxyType);
 			return ret;
 		}
 
@@ -75,28 +74,25 @@ namespace CookComputing.XmlRpc
 			// create persistable assembly
 			if (assemblyName.IndexOf(".dll") == (assemblyName.Length - 4))
 				assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
-			string moduleName = assemblyName + ".dll";
 			AssemblyBuilder assBldr = BuildAssembly(itf, assemblyName,
-			  moduleName, typeName, AssemblyBuilderAccess.Run);
+			   typeName, AssemblyBuilderAccess.Run);
 			Type proxyType = assBldr.GetType(typeName);
 			object ret = Activator.CreateInstance(proxyType);
 			//assBldr.Save(moduleName);
 			return ret;
 		}
 
-		static AssemblyBuilder BuildAssembly(
+		private static AssemblyBuilder BuildAssembly(
 		  Type itf,
 		  string assemblyName,
-		  string moduleName,
 		  string typeName,
 		  AssemblyBuilderAccess access)
 		{
 			string urlString = GetXmlRpcUrl(itf);
-			ArrayList methods = GetXmlRpcMethods(itf);
-			ArrayList beginMethods = GetXmlRpcBeginMethods(itf);
-			ArrayList endMethods = GetXmlRpcEndMethods(itf);
-			AssemblyName assName = new AssemblyName();
-			assName.Name = assemblyName;
+			var methods = GetXmlRpcMethods(itf);
+			var beginMethods = GetXmlRpcBeginMethods(itf);
+			var endMethods = GetXmlRpcEndMethods(itf);
+			AssemblyName assName = new AssemblyName { Name = assemblyName };
 			if (access == AssemblyBuilderAccess.Run)
 				assName.Version = itf.Assembly.GetName().Version;
 			AssemblyBuilder assBldr = AssemblyBuilder.DefineDynamicAssembly(assName, access);
@@ -105,7 +101,7 @@ namespace CookComputing.XmlRpc
 			  typeName,
 			  TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public,
 			  typeof(XmlRpcClientProtocol),
-			  new Type[] { itf });
+			  new [] { itf });
 			BuildConstructor(typeBldr, typeof(XmlRpcClientProtocol), urlString);
 			BuildMethods(typeBldr, methods);
 			BuildBeginMethods(typeBldr, beginMethods);
@@ -114,7 +110,7 @@ namespace CookComputing.XmlRpc
 			return assBldr;
 		}
 
-		static void BuildMethods(TypeBuilder tb, ArrayList methods)
+		private static void BuildMethods(TypeBuilder tb, IEnumerable<MethodData> methods)
 		{
 			foreach (MethodData mthdData in methods)
 			{
@@ -153,7 +149,7 @@ namespace CookComputing.XmlRpc
 			ConstructorInfo ci = methodAttr.GetConstructor(oneString);
 			var pis
 			  = new[] { methodAttr.GetProperty("StructParams") };
-			object[] structParam = new object[] { structParams };
+			var structParam = new object[] { structParams };
 			CustomAttributeBuilder cab =
 			  new CustomAttributeBuilder(ci, new object[] { rpcMethodName },
 				pis, structParam);
@@ -179,13 +175,13 @@ namespace CookComputing.XmlRpc
 			LocalBuilder tempRetVal = null;
 			if (typeof(void) != returnType)
 			{
-				tempRetVal = ilgen.DeclareLocal(typeof(System.Object));
+				tempRetVal = ilgen.DeclareLocal(typeof(object));
 				retVal = ilgen.DeclareLocal(returnType);
 			}
 			// declare variable to store method args and emit code to populate ut
-			LocalBuilder argValues = ilgen.DeclareLocal(typeof(System.Object[]));
+			LocalBuilder argValues = ilgen.DeclareLocal(typeof(object[]));
 			ilgen.Emit(OpCodes.Ldc_I4, argTypes.Length);
-			ilgen.Emit(OpCodes.Newarr, typeof(System.Object));
+			ilgen.Emit(OpCodes.Newarr, typeof(object));
 			ilgen.Emit(OpCodes.Stloc, argValues);
 			for (int argLoad = 0; argLoad < argTypes.Length; argLoad++)
 			{
@@ -199,12 +195,12 @@ namespace CookComputing.XmlRpc
 				ilgen.Emit(OpCodes.Stelem_Ref);
 			}
 			// call Invoke on base class
-			Type[] invokeTypes = new Type[] { typeof(MethodInfo), typeof(object[]) };
+			var invokeTypes = new [] { typeof(MethodInfo), typeof(object[]) };
 			MethodInfo invokeMethod
 			  = typeof(XmlRpcClientProtocol).GetMethod("Invoke", invokeTypes);
 			ilgen.Emit(OpCodes.Ldarg_0);
 			ilgen.Emit(OpCodes.Call, typeof(MethodBase).GetMethod("GetCurrentMethod"));
-			ilgen.Emit(OpCodes.Castclass, typeof(System.Reflection.MethodInfo));
+			ilgen.Emit(OpCodes.Castclass, typeof(MethodInfo));
 			ilgen.Emit(OpCodes.Ldloc, argValues);
 			ilgen.Emit(OpCodes.Call, invokeMethod);
 			//  if non-void return prepare return value, otherwise pop to discard 
@@ -216,7 +212,7 @@ namespace CookComputing.XmlRpc
 				ilgen.Emit(OpCodes.Ldloc, tempRetVal);
 				ilgen.Emit(OpCodes.Brfalse, retIsNull);
 				ilgen.Emit(OpCodes.Ldloc, tempRetVal);
-				if (true == returnType.IsValueType)
+				if (returnType.IsValueType)
 				{
 					ilgen.Emit(OpCodes.Unbox, returnType);
 					ilgen.Emit(OpCodes.Ldobj, returnType);
@@ -236,7 +232,7 @@ namespace CookComputing.XmlRpc
 			ilgen.Emit(OpCodes.Ret);
 		}
 
-		static void BuildBeginMethods(TypeBuilder tb, ArrayList methods)
+		private static void BuildBeginMethods(TypeBuilder tb, IEnumerable<MethodData> methods)
 		{
 			foreach (MethodData mthdData in methods)
 			{
@@ -249,7 +245,7 @@ namespace CookComputing.XmlRpc
 				for (int i = 0; i < mi.GetParameters().Length; i++)
 				{
 					argTypes[i] = mi.GetParameters()[i].ParameterType;
-					if (argTypes[i] == typeof(System.AsyncCallback))
+					if (argTypes[i] == typeof(AsyncCallback))
 						argCount = i;
 				}
 				MethodBuilder mthdBldr = tb.DefineMethod(
@@ -258,7 +254,7 @@ namespace CookComputing.XmlRpc
 				  mi.ReturnType,
 				  argTypes);
 				// add attribute to method
-				Type[] oneString = new Type[1] { typeof(string) };
+				var oneString = new [] { typeof(string) };
 				Type methodAttr = typeof(XmlRpcBeginAttribute);
 				ConstructorInfo ci = methodAttr.GetConstructor(oneString);
 				CustomAttributeBuilder cab =
@@ -267,9 +263,9 @@ namespace CookComputing.XmlRpc
 				// start generating IL
 				ILGenerator ilgen = mthdBldr.GetILGenerator();
 				// declare variable to store method args and emit code to populate it
-				LocalBuilder argValues = ilgen.DeclareLocal(typeof(System.Object[]));
+				LocalBuilder argValues = ilgen.DeclareLocal(typeof(object[]));
 				ilgen.Emit(OpCodes.Ldc_I4, argCount);
-				ilgen.Emit(OpCodes.Newarr, typeof(System.Object));
+				ilgen.Emit(OpCodes.Newarr, typeof(object));
 				ilgen.Emit(OpCodes.Stloc, argValues);
 				for (int argLoad = 0; argLoad < argCount; argLoad++)
 				{
@@ -288,7 +284,7 @@ namespace CookComputing.XmlRpc
 				}
 				// emit code to store AsyncCallback parameter, defaulting to null 
 				// if not in method signature
-				LocalBuilder acbValue = ilgen.DeclareLocal(typeof(System.AsyncCallback));
+				LocalBuilder acbValue = ilgen.DeclareLocal(typeof(AsyncCallback));
 				if (argCount < paramCount)
 				{
 					ilgen.Emit(OpCodes.Ldarg, argCount + 1);
@@ -296,26 +292,26 @@ namespace CookComputing.XmlRpc
 				}
 				// emit code to store async state parameter, defaulting to null 
 				// if not in method signature
-				LocalBuilder objValue = ilgen.DeclareLocal(typeof(System.Object));
+				LocalBuilder objValue = ilgen.DeclareLocal(typeof(object));
 				if (argCount < (paramCount - 1))
 				{
 					ilgen.Emit(OpCodes.Ldarg, argCount + 2);
 					ilgen.Emit(OpCodes.Stloc, objValue);
 				}
 				// emit code to call BeginInvoke on base class
-				Type[] invokeTypes = new Type[]
+				var invokeTypes = new []
 			  {
 		typeof(MethodInfo),
 		typeof(object[]),
-		typeof(System.Object),
-		typeof(System.AsyncCallback),
-		typeof(System.Object)
+		typeof(object),
+		typeof(AsyncCallback),
+		typeof(object)
 			  };
 				MethodInfo invokeMethod
 				  = typeof(XmlRpcClientProtocol).GetMethod("BeginInvoke", invokeTypes);
 				ilgen.Emit(OpCodes.Ldarg_0);
 				ilgen.Emit(OpCodes.Call, typeof(MethodBase).GetMethod("GetCurrentMethod"));
-				ilgen.Emit(OpCodes.Castclass, typeof(System.Reflection.MethodInfo));
+				ilgen.Emit(OpCodes.Castclass, typeof(MethodInfo));
 				ilgen.Emit(OpCodes.Ldloc, argValues);
 				ilgen.Emit(OpCodes.Ldarg_0);
 				ilgen.Emit(OpCodes.Ldloc, acbValue);
@@ -327,49 +323,49 @@ namespace CookComputing.XmlRpc
 			}
 		}
 
-		static void BuildEndMethods(TypeBuilder tb, ArrayList methods)
+		private static void BuildEndMethods(TypeBuilder tb, IEnumerable<MethodData> methods)
 		{
 			LocalBuilder retVal = null;
 			LocalBuilder tempRetVal = null;
 			foreach (MethodData mthdData in methods)
 			{
-				MethodInfo mi = mthdData.mi;
-				Type[] argTypes = new Type[] { typeof(System.IAsyncResult) };
-				MethodBuilder mthdBldr = tb.DefineMethod(mi.Name,
+				var mi = mthdData.mi;
+				Type[] argTypes = { typeof(IAsyncResult) };
+				var mthdBldr = tb.DefineMethod(mi.Name,
 				  MethodAttributes.Public | MethodAttributes.Virtual,
 				  mi.ReturnType, argTypes);
 				// start generating IL
-				ILGenerator ilgen = mthdBldr.GetILGenerator();
+				var ilgen = mthdBldr.GetILGenerator();
 				// if non-void return, declared locals for processing return value
 				if (typeof(void) != mi.ReturnType)
 				{
-					tempRetVal = ilgen.DeclareLocal(typeof(System.Object));
+					tempRetVal = ilgen.DeclareLocal(typeof(object));
 					retVal = ilgen.DeclareLocal(mi.ReturnType);
 				}
 				// call EndInvoke on base class
-				Type[] invokeTypes
-				  = new Type[] { typeof(System.IAsyncResult), typeof(System.Type) };
-				MethodInfo invokeMethod
+				var invokeTypes
+				  = new[] { typeof(IAsyncResult), typeof(Type) };
+				var invokeMethod
 				  = typeof(XmlRpcClientProtocol).GetMethod("EndInvoke", invokeTypes);
-				Type[] GetTypeTypes
-				  = new Type[] { typeof(System.String) };
-				MethodInfo GetTypeMethod
-				  = typeof(System.Type).GetMethod("GetType", GetTypeTypes);
+				var getTypeTypes
+				  = new[] { typeof(string) };
+				var getTypeMethod
+				  = typeof(Type).GetMethod("GetType", getTypeTypes);
 				ilgen.Emit(OpCodes.Ldarg_0);  // "this"
 				ilgen.Emit(OpCodes.Ldarg_1);  // IAsyncResult parameter
 				ilgen.Emit(OpCodes.Ldstr, mi.ReturnType.AssemblyQualifiedName);
-				ilgen.Emit(OpCodes.Call, GetTypeMethod);
+				ilgen.Emit(OpCodes.Call, getTypeMethod);
 				ilgen.Emit(OpCodes.Call, invokeMethod);
 				//  if non-void return prepare return value otherwise pop to discard 
 				if (typeof(void) != mi.ReturnType)
 				{
 					// if return value is null, don't cast it to required type
-					Label retIsNull = ilgen.DefineLabel();
+					var retIsNull = ilgen.DefineLabel();
 					ilgen.Emit(OpCodes.Stloc, tempRetVal);
 					ilgen.Emit(OpCodes.Ldloc, tempRetVal);
 					ilgen.Emit(OpCodes.Brfalse, retIsNull);
 					ilgen.Emit(OpCodes.Ldloc, tempRetVal);
-					if (true == mi.ReturnType.IsValueType)
+					if (mi.ReturnType.IsValueType)
 					{
 						ilgen.Emit(OpCodes.Unbox, mi.ReturnType);
 						ilgen.Emit(OpCodes.Ldobj, mi.ReturnType);
@@ -396,36 +392,36 @@ namespace CookComputing.XmlRpc
 		  Type baseType,
 		  string urlStr)
 		{
-			ConstructorBuilder ctorBldr = typeBldr.DefineConstructor(
+			var ctorBldr = typeBldr.DefineConstructor(
 			  MethodAttributes.Public | MethodAttributes.SpecialName |
 			  MethodAttributes.RTSpecialName | MethodAttributes.HideBySig,
 			  CallingConventions.Standard,
 			  Type.EmptyTypes);
-			if (urlStr != null && urlStr.Length > 0)
+			if (!string.IsNullOrEmpty(urlStr))
 			{
-				Type urlAttr = typeof(XmlRpcUrlAttribute);
-				Type[] oneString = new Type[1] { typeof(string) };
-				ConstructorInfo ci = urlAttr.GetConstructor(oneString);
-				CustomAttributeBuilder cab =
+				var urlAttr = typeof(XmlRpcUrlAttribute);
+				var oneString = new[] { typeof(string) };
+				var ci = urlAttr.GetConstructor(oneString);
+				var cab =
 				  new CustomAttributeBuilder(ci, new object[] { urlStr });
 				typeBldr.SetCustomAttribute(cab);
 			}
-			ILGenerator ilgen = ctorBldr.GetILGenerator();
+			var ilgen = ctorBldr.GetILGenerator();
 			//  Call the base constructor.
 			ilgen.Emit(OpCodes.Ldarg_0);
-			ConstructorInfo ctorInfo = baseType.GetConstructor(System.Type.EmptyTypes);
+			var ctorInfo = baseType.GetConstructor(Type.EmptyTypes);
 			ilgen.Emit(OpCodes.Call, ctorInfo);
 			ilgen.Emit(OpCodes.Ret);
 		}
 
-		private static string GetXmlRpcUrl(Type itf)
+		private static string GetXmlRpcUrl(MemberInfo itf)
 		{
-			Attribute attr = Attribute.GetCustomAttribute(itf,
+			var attr = Attribute.GetCustomAttribute(itf,
 			  typeof(XmlRpcUrlAttribute));
 			if (attr == null)
 				return null;
-			XmlRpcUrlAttribute xruAttr = attr as XmlRpcUrlAttribute;
-			string url = xruAttr.Uri;
+			var xruAttr = attr as XmlRpcUrlAttribute;
+			var url = xruAttr.Uri;
 			return url;
 		}
 
@@ -433,31 +429,32 @@ namespace CookComputing.XmlRpc
 		/// Type.GetMethods() does not return methods that a derived interface
 		/// inherits from its base interfaces; this method does.
 		/// </summary>
-		private static MethodInfo[] GetMethods(Type type)
+		private static IEnumerable<MethodInfo> GetMethods(Type type)
 		{
-			MethodInfo[] methods = type.GetMethods();
+			var methods = type.GetMethods();
 			if (!type.IsInterface)
 			{
 				return methods;
 			}
 
-			Type[] interfaces = type.GetInterfaces();
+			var interfaces = type.GetInterfaces();
 			if (interfaces.Length == 0)
 			{
 				return methods;
 			}
 
-			ArrayList result = new ArrayList(methods);
-			foreach (Type itf in type.GetInterfaces())
+			var result = (IEnumerable<MethodInfo>) methods;
+			foreach (var itf in type.GetInterfaces())
 			{
-				result.AddRange(itf.GetMethods());
+				result = result.Concat(itf.GetMethods());
 			}
-			return (MethodInfo[])result.ToArray(typeof(MethodInfo));
+
+			return result;
 		}
 
-		private static ArrayList GetXmlRpcMethods(Type itf)
+		private static IList<MethodData> GetXmlRpcMethods(Type itf)
 		{
-			ArrayList ret = new ArrayList();
+			var ret = new List<MethodData>();
 			if (!itf.IsInterface)
 				throw new Exception("type not interface");
 			foreach (MethodInfo mi in GetMethods(itf))
@@ -475,12 +472,12 @@ namespace CookComputing.XmlRpc
 
 		private static string GetXmlRpcMethodName(MethodInfo mi)
 		{
-			Attribute attr = Attribute.GetCustomAttribute(mi,
+			var attr = Attribute.GetCustomAttribute(mi,
 			  typeof(XmlRpcMethodAttribute));
 			if (attr == null)
 				return null;
-			XmlRpcMethodAttribute xrmAttr = attr as XmlRpcMethodAttribute;
-			string rpcMethod = xrmAttr.Method;
+			var xrmAttr = attr as XmlRpcMethodAttribute;
+			var rpcMethod = xrmAttr.Method;
 			if (rpcMethod == "")
 			{
 				rpcMethod = mi.Name;
@@ -490,32 +487,21 @@ namespace CookComputing.XmlRpc
 
 		private class MethodData
 		{
-			public MethodData(MethodInfo Mi, string XmlRpcName, bool ParamsMethod)
+			public MethodData(MethodInfo mi, string xmlRpcName, bool paramsMethod)
 			{
-				mi           = Mi;
-				xmlRpcName   = XmlRpcName;
-				paramsMethod = ParamsMethod;
-				returnType   = null;
-			}
-
-			public MethodData(MethodInfo Mi, string xmlRpcName, bool paramsMethod,
-							  Type returnType)
-			{
-				mi           = Mi;
-				this.xmlRpcName   = xmlRpcName;
+				this.mi = mi;
+				this.xmlRpcName = xmlRpcName;
 				this.paramsMethod = paramsMethod;
-				this.returnType   = returnType;
 			}
 
 			public readonly MethodInfo mi;
-			public readonly string     xmlRpcName;
-			public          Type       returnType;
-			public readonly bool       paramsMethod;
+			public readonly string xmlRpcName;
+			public readonly bool paramsMethod;
 		}
 
-		private static ArrayList GetXmlRpcBeginMethods(Type itf)
+		private static IEnumerable<MethodData> GetXmlRpcBeginMethods(Type itf)
 		{
-			ArrayList ret = new ArrayList();
+			var ret = new List<MethodData>();
 			if (!itf.IsInterface)
 				throw new Exception("type not interface");
 			foreach (MethodInfo mi in itf.GetMethods())
@@ -555,14 +541,14 @@ namespace CookComputing.XmlRpc
 							  mi.Name));
 					}
 				}
-				ret.Add(new MethodData(mi, rpcMethod, false, null));
+				ret.Add(new MethodData(mi, rpcMethod, false));
 			}
 			return ret;
 		}
 
-		private static ArrayList GetXmlRpcEndMethods(Type itf)
+		private static IEnumerable<MethodData> GetXmlRpcEndMethods(Type itf)
 		{
-			var ret = new ArrayList();
+			var ret = new List<MethodData>();
 			if (!itf.IsInterface)
 				throw new Exception("type not interface");
 			foreach (var mi in itf.GetMethods())

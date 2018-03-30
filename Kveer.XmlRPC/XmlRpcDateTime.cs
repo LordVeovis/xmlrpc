@@ -54,7 +54,7 @@ namespace CookComputing.XmlRpc
 		public override bool Equals(
 			object o)
 		{
-			if (o == null || !(o is XmlRpcDateTime))
+			if (!(o is XmlRpcDateTime))
 				return false;
 			var dbl = o as XmlRpcDateTime;
 			return dbl._value == _value;

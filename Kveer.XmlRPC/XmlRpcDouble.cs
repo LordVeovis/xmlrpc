@@ -53,10 +53,8 @@ namespace CookComputing.XmlRpc
 		public override bool Equals(
 			object o)
 		{
-			if (o == null || !(o is XmlRpcDouble))
-				return false;
 			var dbl = o as XmlRpcDouble;
-			return dbl._value == _value;
+			return dbl?._value == _value;
 		}
 
 		public static bool operator ==(
