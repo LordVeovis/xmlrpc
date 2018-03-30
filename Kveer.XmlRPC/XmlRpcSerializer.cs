@@ -207,7 +207,7 @@ namespace CookComputing.XmlRpc
 				using (var xmlRdr = new XmlTextReader(stm))
 				{
 #if (!COMPACT_FRAMEWORK)
-					xmlRdr.ProhibitDtd = true;
+					xmlRdr.DtdProcessing = DtdProcessing.Prohibit;
 #endif
 					xdoc.Load(xmlRdr);
 				}
@@ -232,7 +232,7 @@ namespace CookComputing.XmlRpc
 				using (var xmlRdr = new XmlTextReader(txtrdr))
 				{
 #if (!COMPACT_FRAMEWORK)
-					xmlRdr.ProhibitDtd = true;
+					xmlRdr.DtdProcessing = DtdProcessing.Prohibit;
 #endif
 					xdoc.Load(xmlRdr);
 				}
@@ -1677,7 +1677,7 @@ namespace CookComputing.XmlRpc
 			{
 				using (var xmlRdr = new XmlTextReader(stm))
 				{
-					xmlRdr.ProhibitDtd = true;
+					xmlRdr.DtdProcessing = DtdProcessing.Prohibit;
 					xdoc.Load(xmlRdr);
 				}
 			}
@@ -1700,7 +1700,7 @@ namespace CookComputing.XmlRpc
 			{
 				using (var xmlRdr = new XmlTextReader(txtrdr))
 				{
-					xmlRdr.ProhibitDtd = true;
+					xmlRdr.DtdProcessing = DtdProcessing.Prohibit;
 					xdoc.Load(xmlRdr);
 				}
 			}
