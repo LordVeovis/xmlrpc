@@ -35,48 +35,10 @@ namespace CookComputing.XmlRpc
 {
 	public class XmlRpcClientProtocol : Component, IXmlRpcProxy
 	{
-		#region Instance Variables
-		private bool _allowAutoRedirect = true;
-#if (!COMPACT_FRAMEWORK)
-		private string _connectionGroupName = null;
-#endif
-#if (!COMPACT_FRAMEWORK && !FX1_0)
-		private bool _expect100Continue = false;
-		private bool _enableCompression = false;
-#endif
-		private ICredentials _credentials = null;
-		private WebHeaderCollection _headers = new WebHeaderCollection();
-		private int _indentation = 2;
-		private bool _keepAlive = true;
-		private XmlRpcNonStandard _nonStandard = XmlRpcNonStandard.None;
-		private bool _preAuthenticate = false;
-		private Version _protocolVersion = HttpVersion.Version11;
-		private IWebProxy _proxy = null;
-#if (!COMPACT_FRAMEWORK)
-		private CookieCollection _responseCookies;
-		private WebHeaderCollection _responseHeaders;
-#endif
-		private int _timeout = 100000;
-		private string _url = null;
-		private string _userAgent = "XML-RPC.NET";
-		private bool _useEmptyParamsTag = true;
-		private bool _useIndentation = true;
-		private bool _useIntTag = false;
-		private bool _useStringTag = true;
-		private Encoding _xmlEncoding = null;
-		private string _xmlRpcMethod = null;
-
-#if (!COMPACT_FRAMEWORK)
-		private X509CertificateCollection _clientCertificates
-		  = new X509CertificateCollection();
-		private CookieContainer _cookies = new CookieContainer();
-#endif
-		#endregion
-		private Guid _id = Util.NewGuid();
 
 
 #if (!COMPACT_FRAMEWORK)
-		public XmlRpcClientProtocol(System.ComponentModel.IContainer container)
+		public XmlRpcClientProtocol(IContainer container)
 		{
 			container.Add(this);
 			InitializeComponent();
@@ -123,40 +85,40 @@ namespace CookComputing.XmlRpc
 		  params object[] parameters)
 		{
 #if (!COMPACT_FRAMEWORK)
-			_responseHeaders = null;
-			_responseCookies = null;
+			ResponseHeaders = null;
+			ResponseCookies = null;
 #endif
 			WebRequest webReq = null;
-			object reto = null;
+			object reto;
 			try
 			{
 				var useUrl = GetEffectiveUrl(clientObj);
 				webReq = GetWebRequest(new Uri(useUrl));
 				var req = MakeXmlRpcRequest(webReq, mi, parameters,
-				  clientObj, _xmlRpcMethod, _id);
+				  clientObj, XmlRpcMethod, Id);
 				SetProperties(webReq);
-				SetRequestHeaders(_headers, webReq);
+				SetRequestHeaders(Headers, webReq);
 #if (!COMPACT_FRAMEWORK)
-				SetClientCertificates(_clientCertificates, webReq);
+				SetClientCertificates(ClientCertificates, webReq);
 #endif
-				Stream serStream = null;
+				Stream serStream;
 				Stream reqStream = null;
-				bool logging = (RequestEvent != null);
+				var logging = (RequestEvent != null);
 				if (!logging)
 					serStream = reqStream = webReq.GetRequestStream();
 				else
 					serStream = new MemoryStream(2000);
 				try
 				{
-					XmlRpcSerializer serializer = new XmlRpcSerializer();
-					if (_xmlEncoding != null)
-						serializer.XmlEncoding = _xmlEncoding;
-					serializer.UseIndentation = _useIndentation;
-					serializer.Indentation = _indentation;
-					serializer.NonStandard = _nonStandard;
-					serializer.UseStringTag = _useStringTag;
-					serializer.UseIntTag = _useIntTag;
-					serializer.UseEmptyParamsTag = _useEmptyParamsTag;
+					var serializer = new XmlRpcSerializer();
+					if (XmlEncoding != null)
+						serializer.XmlEncoding = XmlEncoding;
+					serializer.UseIndentation = UseIndentation;
+					serializer.Indentation = Indentation;
+					serializer.NonStandard = NonStandard;
+					serializer.UseStringTag = UseStringTag;
+					serializer.UseIntTag = UseIntTag;
+					serializer.UseEmptyParamsTag = UseEmptyParamsTag;
 					serializer.SerializeRequest(serStream, req);
 					if (logging)
 					{
@@ -171,20 +133,19 @@ namespace CookComputing.XmlRpc
 				}
 				finally
 				{
-					if (reqStream != null)
-						reqStream.Close();
+					reqStream?.Close();
 				}
-				HttpWebResponse webResp = GetWebResponse(webReq) as HttpWebResponse;
+				var webResp = GetWebResponse(webReq) as HttpWebResponse;
 #if (!COMPACT_FRAMEWORK)
-				_responseCookies = webResp.Cookies;
-				_responseHeaders = webResp.Headers;
+				ResponseCookies = webResp.Cookies;
+				ResponseHeaders = webResp.Headers;
 #endif
 				Stream respStm = null;
-				Stream deserStream;
 				logging = (ResponseEvent != null);
 				try
 				{
 					respStm = webResp.GetResponseStream();
+					Stream deserStream;
 					if (!logging)
 					{
 						deserStream = respStm;
@@ -197,12 +158,12 @@ namespace CookComputing.XmlRpc
 						deserStream.Position = 0;
 					}
 #if (!COMPACT_FRAMEWORK && !FX1_0)
-					deserStream = MaybeDecompressStream((HttpWebResponse)webResp,
+					deserStream = MaybeDecompressStream(webResp,
 					  deserStream);
 #endif
 					try
 					{
-						XmlRpcResponse resp = ReadResponse(req, webResp, deserStream, null);
+						var resp = ReadResponse(req, webResp, deserStream, null);
 						reto = resp.retVal;
 					}
 					finally
@@ -217,8 +178,7 @@ namespace CookComputing.XmlRpc
 				}
 				finally
 				{
-					if (respStm != null)
-						respStm.Close();
+					respStm?.Close();
 				}
 			}
 			finally
@@ -231,203 +191,105 @@ namespace CookComputing.XmlRpc
 
 		#region Properties
 
-		public bool AllowAutoRedirect
-		{
-			get { return _allowAutoRedirect; }
-			set { _allowAutoRedirect = value; }
-		}
+		public bool AllowAutoRedirect { get; set; } = true;
 
 #if (!COMPACT_FRAMEWORK)
 		[Browsable(false)]
-		public X509CertificateCollection ClientCertificates
-		{
-			get { return _clientCertificates; }
-		}
+		public X509CertificateCollection ClientCertificates { get; } = new X509CertificateCollection();
 #endif
 
 #if (!COMPACT_FRAMEWORK)
-		public string ConnectionGroupName
-		{
-			get { return _connectionGroupName; }
-			set { _connectionGroupName = value; }
-		}
+		public string ConnectionGroupName { get; set; } = null;
 #endif
 
 		[Browsable(false)]
-		public ICredentials Credentials
-		{
-			get { return _credentials; }
-			set { _credentials = value; }
-		}
+		public ICredentials Credentials { get; set; } = null;
 
 #if (!COMPACT_FRAMEWORK && !FX1_0)
-		public bool EnableCompression
-		{
-			get { return _enableCompression; }
-			set { _enableCompression = value; }
-		}
+		public bool EnableCompression { get; set; } = false;
 #endif
 
 		[Browsable(false)]
-		public WebHeaderCollection Headers
-		{
-			get { return _headers; }
-		}
+		public WebHeaderCollection Headers { get; } = new WebHeaderCollection();
 
 #if (!COMPACT_FRAMEWORK && !FX1_0)
-		public bool Expect100Continue
-		{
-			get { return _expect100Continue; }
-			set { _expect100Continue = value; }
-		}
+		public bool Expect100Continue { get; set; } = false;
 #endif
 
 #if (!COMPACT_FRAMEWORK)
-		public CookieContainer CookieContainer
-		{
-			get { return _cookies; }
-		}
+		public CookieContainer CookieContainer { get; } = new CookieContainer();
 #endif
 
-		public Guid Id
-		{
-			get { return _id; }
-		}
+		public Guid Id { get; } = Util.NewGuid();
 
-		public int Indentation
-		{
-			get { return _indentation; }
-			set { _indentation = value; }
-		}
+		public int Indentation { get; set; } = 2;
 
-		public bool KeepAlive
-		{
-			get { return _keepAlive; }
-			set { _keepAlive = value; }
-		}
+		public bool KeepAlive { get; set; } = true;
 
-		public XmlRpcNonStandard NonStandard
-		{
-			get { return _nonStandard; }
-			set { _nonStandard = value; }
-		}
+		public XmlRpcNonStandard NonStandard { get; set; } = XmlRpcNonStandard.None;
 
-		public bool PreAuthenticate
-		{
-			get { return _preAuthenticate; }
-			set { _preAuthenticate = value; }
-		}
+		public bool PreAuthenticate { get; set; } = false;
 
 		[Browsable(false)]
-		public System.Version ProtocolVersion
-		{
-			get { return _protocolVersion; }
-			set { _protocolVersion = value; }
-		}
+		public Version ProtocolVersion { get; set; } = HttpVersion.Version11;
 
 		[Browsable(false)]
-		public IWebProxy Proxy
-		{
-			get { return _proxy; }
-			set { _proxy = value; }
-		}
+		public IWebProxy Proxy { get; set; } = null;
 
 #if (!COMPACT_FRAMEWORK)
-		public CookieCollection ResponseCookies
-		{
-			get { return _responseCookies; }
-		}
+		public CookieCollection ResponseCookies { get; private set; }
 #endif
 
 #if (!COMPACT_FRAMEWORK)
-		public WebHeaderCollection ResponseHeaders
-		{
-			get { return _responseHeaders; }
-		}
+		public WebHeaderCollection ResponseHeaders { get; private set; }
 #endif
 
-		public int Timeout
-		{
-			get { return _timeout; }
-			set { _timeout = value; }
-		}
+		public int Timeout { get; set; } = 100000;
 
-		public string Url
-		{
-			get { return _url; }
-			set { _url = value; }
-		}
+		public string Url { get; set; } = null;
 
-		public bool UseEmptyParamsTag
-		{
-			get { return _useEmptyParamsTag; }
-			set { _useEmptyParamsTag = value; }
-		}
+		public bool UseEmptyParamsTag { get; set; } = true;
 
-		public bool UseIndentation
-		{
-			get { return _useIndentation; }
-			set { _useIndentation = value; }
-		}
+		public bool UseIndentation { get; set; } = true;
 
-		public bool UseIntTag
-		{
-			get { return _useIntTag; }
-			set { _useIntTag = value; }
-		}
+		public bool UseIntTag { get; set; } = false;
 
-		public string UserAgent
-		{
-			get { return _userAgent; }
-			set { _userAgent = value; }
-		}
+		public string UserAgent { get; set; } = "XML-RPC.NET";
 
-		public bool UseStringTag
-		{
-			get { return _useStringTag; }
-			set { _useStringTag = value; }
-		}
+		public bool UseStringTag { get; set; } = true;
 
 		[Browsable(false)]
-		public Encoding XmlEncoding
-		{
-			get { return _xmlEncoding; }
-			set { _xmlEncoding = value; }
-		}
+		public Encoding XmlEncoding { get; set; } = null;
 
-		public string XmlRpcMethod
-		{
-			get { return _xmlRpcMethod; }
-			set { _xmlRpcMethod = value; }
-		}
+		public string XmlRpcMethod { get; set; } = null;
 
 		#endregion
 
 		public void SetProperties(WebRequest webReq)
 		{
-			if (_proxy != null)
-				webReq.Proxy = _proxy;
-			HttpWebRequest httpReq = (HttpWebRequest)webReq;
-			httpReq.UserAgent = _userAgent;
-			httpReq.ProtocolVersion = _protocolVersion;
-			httpReq.KeepAlive = _keepAlive;
+			if (Proxy != null)
+				webReq.Proxy = Proxy;
+			var httpReq = (HttpWebRequest)webReq;
+			httpReq.UserAgent = UserAgent;
+			httpReq.ProtocolVersion = ProtocolVersion;
+			httpReq.KeepAlive = KeepAlive;
 #if (!COMPACT_FRAMEWORK)
-			httpReq.CookieContainer = _cookies;
+			httpReq.CookieContainer = CookieContainer;
 #endif
 #if (!COMPACT_FRAMEWORK && !FX1_0)
-			httpReq.ServicePoint.Expect100Continue = _expect100Continue;
+			httpReq.ServicePoint.Expect100Continue = Expect100Continue;
 #endif
-			httpReq.AllowAutoRedirect = _allowAutoRedirect;
+			httpReq.AllowAutoRedirect = AllowAutoRedirect;
 			webReq.Timeout = Timeout;
 #if (!COMPACT_FRAMEWORK)
-			webReq.ConnectionGroupName = this._connectionGroupName;
+			webReq.ConnectionGroupName = ConnectionGroupName;
 #endif
 			webReq.Credentials = Credentials;
 			webReq.PreAuthenticate = PreAuthenticate;
 			// Compact Framework sets this to false by default
-			(webReq as HttpWebRequest).AllowWriteStreamBuffering = true;
+			((HttpWebRequest) webReq).AllowWriteStreamBuffering = true;
 #if (!COMPACT_FRAMEWORK && !FX1_0)
-			if (_enableCompression)
+			if (EnableCompression)
 				webReq.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
 #endif
 		}
@@ -483,7 +345,7 @@ namespace CookComputing.XmlRpc
 					throw new XmlRpcServerException(httpResp.StatusDescription);
 			}
 			XmlRpcSerializer serializer = new XmlRpcSerializer();
-			serializer.NonStandard = _nonStandard;
+			serializer.NonStandard = NonStandard;
 			Type retType = returnType;
 			if (retType == null)
 				retType = req.mi.ReturnType;
@@ -499,7 +361,7 @@ namespace CookComputing.XmlRpc
 			if (parameters != null)
 			{
 				paramTypes = new Type[parameters.Length];
-				for (int i = 0; i < paramTypes.Length; i++)
+				for (var i = 0; i < paramTypes.Length; i++)
 				{
 					if (parameters[i] == null)
 						throw new XmlRpcNullParameterException("Null parameters are invalid");
@@ -507,14 +369,14 @@ namespace CookComputing.XmlRpc
 				}
 			}
 			Type type = clientObj.GetType();
-			MethodInfo mi = type.GetMethod(methodName, paramTypes);
+			var mi = type.GetMethod(methodName, paramTypes);
 			if (mi == null)
 			{
 				try
 				{
 					mi = type.GetMethod(methodName);
 				}
-				catch (System.Reflection.AmbiguousMatchException)
+				catch (AmbiguousMatchException)
 				{
 					throw new XmlRpcInvalidParametersException("Method parameters match "
 					  + "the signature of more than one method");
@@ -522,29 +384,29 @@ namespace CookComputing.XmlRpc
 				if (mi == null)
 					throw new Exception(
 					  "Invoke on non-existent or non-public proxy method");
-				else
-					throw new XmlRpcInvalidParametersException("Method parameters do "
-					  + "not match signature of any method called " + methodName);
+
+				throw new XmlRpcInvalidParametersException("Method parameters do "
+				  + "not match signature of any method called " + methodName);
 			}
 			return mi;
 		}
 
-		string GetRpcMethodName(object clientObj, MethodInfo mi)
+		private static string GetRpcMethodName(object clientObj, MethodInfo mi)
 		{
 			string rpcMethod;
-			string MethodName = mi.Name;
-			Attribute attr = Attribute.GetCustomAttribute(mi,
+			var methodName = mi.Name;
+			var attr = Attribute.GetCustomAttribute(mi,
 			  typeof(XmlRpcBeginAttribute));
 			if (attr != null)
 			{
 				rpcMethod = ((XmlRpcBeginAttribute)attr).Method;
 				if (rpcMethod == "")
 				{
-					if (!MethodName.StartsWith("Begin") || MethodName.Length <= 5)
+					if (!methodName.StartsWith("Begin") || methodName.Length <= 5)
 						throw new Exception(string.Format(
 						  "method {0} has invalid signature for begin method",
-						  MethodName));
-					rpcMethod = MethodName.Substring(5);
+						  methodName));
+					rpcMethod = methodName.Substring(5);
 				}
 				return rpcMethod;
 			}
@@ -554,7 +416,7 @@ namespace CookComputing.XmlRpc
 			{
 				throw new Exception("missing method attribute");
 			}
-			XmlRpcMethodAttribute xrmAttr = attr as XmlRpcMethodAttribute;
+			var xrmAttr = attr as XmlRpcMethodAttribute;
 			rpcMethod = xrmAttr.Method;
 			if (rpcMethod == "")
 			{
@@ -605,35 +467,35 @@ namespace CookComputing.XmlRpc
 			string useUrl = GetEffectiveUrl(clientObj);
 			WebRequest webReq = GetWebRequest(new Uri(useUrl));
 			XmlRpcRequest xmlRpcReq = MakeXmlRpcRequest(webReq, mi,
-			  parameters, clientObj, _xmlRpcMethod, _id);
+			  parameters, clientObj, XmlRpcMethod, Id);
 			SetProperties(webReq);
-			SetRequestHeaders(_headers, webReq);
+			SetRequestHeaders(Headers, webReq);
 #if (!COMPACT_FRAMEWORK)
-			SetClientCertificates(_clientCertificates, webReq);
+			SetClientCertificates(ClientCertificates, webReq);
 #endif
 			Encoding useEncoding = null;
-			if (_xmlEncoding != null)
-				useEncoding = _xmlEncoding;
+			if (XmlEncoding != null)
+				useEncoding = XmlEncoding;
 			XmlRpcAsyncResult asr = new XmlRpcAsyncResult(this, xmlRpcReq,
-			  useEncoding, _useEmptyParamsTag, _useIndentation, _indentation,
-			  _useIntTag, _useStringTag, webReq, callback, outerAsyncState, 0);
-			webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallback),
+			  useEncoding, UseEmptyParamsTag, UseIndentation, Indentation,
+			  UseIntTag, UseStringTag, webReq, callback, outerAsyncState, 0);
+			webReq.BeginGetRequestStream(GetRequestStreamCallback,
 			  asr);
 			if (!asr.IsCompleted)
 				asr.CompletedSynchronously = false;
 			return asr;
 		}
 
-		static void GetRequestStreamCallback(IAsyncResult asyncResult)
+		private static void GetRequestStreamCallback(IAsyncResult asyncResult)
 		{
-			XmlRpcAsyncResult clientResult
+			var clientResult
 			  = (XmlRpcAsyncResult)asyncResult.AsyncState;
 			clientResult.CompletedSynchronously = asyncResult.CompletedSynchronously;
 			try
 			{
-				Stream serStream = null;
+				Stream serStream;
 				Stream reqStream = null;
-				bool logging = (clientResult.ClientProtocol.RequestEvent != null);
+				var logging = (clientResult.ClientProtocol.RequestEvent != null);
 				if (!logging)
 				{
 					serStream = reqStream
@@ -643,8 +505,8 @@ namespace CookComputing.XmlRpc
 					serStream = new MemoryStream(2000);
 				try
 				{
-					XmlRpcRequest req = clientResult.XmlRpcRequest;
-					XmlRpcSerializer serializer = new XmlRpcSerializer();
+					var req = clientResult.XmlRpcRequest;
+					var serializer = new XmlRpcSerializer();
 					if (clientResult.XmlEncoding != null)
 						serializer.XmlEncoding = clientResult.XmlEncoding;
 					serializer.UseEmptyParamsTag = clientResult.UseEmptyParamsTag;
@@ -666,11 +528,10 @@ namespace CookComputing.XmlRpc
 				}
 				finally
 				{
-					if (reqStream != null)
-						reqStream.Close();
+					reqStream?.Close();
 				}
 				clientResult.Request.BeginGetResponse(
-				  new AsyncCallback(GetResponseCallback), clientResult);
+				  GetResponseCallback, clientResult);
 			}
 			catch (Exception ex)
 			{
@@ -719,23 +580,20 @@ namespace CookComputing.XmlRpc
 			IAsyncResult asyncResult;
 			do
 			{
-				byte[] buff = result.Buffer;
-				long contLen = result.Response.ContentLength;
+				var buff = result.Buffer;
+				var contLen = result.Response.ContentLength;
 				if (buff == null)
 				{
-					if (contLen == -1)
-						result.Buffer = new Byte[1024];
-					else
-						result.Buffer = new Byte[contLen];
+					result.Buffer = contLen == -1 ? new byte[1024] : new byte[contLen];
 				}
 				else
 				{
 					if (contLen != -1 && contLen > result.Buffer.Length)
-						result.Buffer = new Byte[contLen];
+						result.Buffer = new byte[contLen];
 				}
 				buff = result.Buffer;
 				asyncResult = result.ResponseStream.BeginRead(buff, 0, buff.Length,
-				  new AsyncCallback(ReadResponseCallback), result);
+				  ReadResponseCallback, result);
 				if (!asyncResult.CompletedSynchronously)
 					return;
 			}
@@ -792,7 +650,7 @@ namespace CookComputing.XmlRpc
 		  Exception ex)
 		{
 			WebException webex = ex as WebException;
-			if (webex != null && webex.Response != null)
+			if (webex?.Response != null)
 			{
 				clientResult.Response = webex.Response;
 				return;
@@ -812,17 +670,17 @@ namespace CookComputing.XmlRpc
 		  IAsyncResult asr,
 		  Type returnType)
 		{
-			object reto = null;
+			object reto;
 			Stream responseStream = null;
 			try
 			{
-				XmlRpcAsyncResult clientResult = (XmlRpcAsyncResult)asr;
+				var clientResult = (XmlRpcAsyncResult)asr;
 				if (clientResult.Exception != null)
 					throw clientResult.Exception;
 				if (clientResult.EndSendCalled)
 					throw new Exception("dup call to EndSend");
 				clientResult.EndSendCalled = true;
-				HttpWebResponse webResp = (HttpWebResponse)clientResult.WaitForResponse();
+				var webResp = (HttpWebResponse)clientResult.WaitForResponse();
 #if (!COMPACT_FRAMEWORK)
 				clientResult._responseCookies = webResp.Cookies;
 				clientResult._responseHeaders = webResp.Headers;
@@ -840,31 +698,30 @@ namespace CookComputing.XmlRpc
 				responseStream = MaybeDecompressStream((HttpWebResponse)webResp,
 				  responseStream);
 #endif
-				XmlRpcResponse resp = ReadResponse(clientResult.XmlRpcRequest,
+				var resp = ReadResponse(clientResult.XmlRpcRequest,
 				  webResp, responseStream, returnType);
 				reto = resp.retVal;
 			}
 			finally
 			{
-				if (responseStream != null)
-					responseStream.Close();
+				responseStream?.Close();
 			}
 			return reto;
 		}
 
-		string GetEffectiveUrl(object clientObj)
+		private string GetEffectiveUrl(object clientObj)
 		{
-			Type type = clientObj.GetType();
+			var type = clientObj.GetType();
 			// client can either have define URI in attribute or have set it
 			// via proxy's ServiceURI property - but must exist by now
-			string useUrl = "";
-			if (Url == "" || Url == null)
+			var useUrl = "";
+			if (string.IsNullOrEmpty(Url))
 			{
-				Attribute urlAttr = Attribute.GetCustomAttribute(type,
+				var urlAttr = Attribute.GetCustomAttribute(type,
 				  typeof(XmlRpcUrlAttribute));
 				if (urlAttr != null)
 				{
-					XmlRpcUrlAttribute xrsAttr = urlAttr as XmlRpcUrlAttribute;
+					var xrsAttr = urlAttr as XmlRpcUrlAttribute;
 					useUrl = xrsAttr.Uri;
 				}
 			}
@@ -884,65 +741,65 @@ namespace CookComputing.XmlRpc
 		[XmlRpcMethod("system.listMethods")]
 		public string[] SystemListMethods()
 		{
-			return (string[])Invoke("SystemListMethods", new Object[0]);
+			return (string[])Invoke("SystemListMethods", new object[0]);
 		}
 
 		[XmlRpcMethod("system.listMethods")]
 		public IAsyncResult BeginSystemListMethods(
-		  AsyncCallback Callback,
-		  object State)
+		  AsyncCallback callback,
+		  object state)
 		{
-			return BeginInvoke("SystemListMethods", new object[0], this, Callback,
-			  State);
+			return BeginInvoke("SystemListMethods", new object[0], this, callback,
+			  state);
 		}
 
-		public string[] EndSystemListMethods(IAsyncResult AsyncResult)
+		public string[] EndSystemListMethods(IAsyncResult asyncResult)
 		{
-			return (string[])EndInvoke(AsyncResult);
+			return (string[])EndInvoke(asyncResult);
 		}
 
 		[XmlRpcMethod("system.methodSignature")]
-		public object[] SystemMethodSignature(string MethodName)
+		public object[] SystemMethodSignature(string methodName)
 		{
 			return (object[])Invoke("SystemMethodSignature",
-			  new Object[] { MethodName });
+			  new object[] { methodName });
 		}
 
 		[XmlRpcMethod("system.methodSignature")]
 		public IAsyncResult BeginSystemMethodSignature(
-		  string MethodName,
-		  AsyncCallback Callback,
-		  object State)
+		  string methodName,
+		  AsyncCallback callback,
+		  object state)
 		{
 			return BeginInvoke("SystemMethodSignature",
-			  new Object[] { MethodName }, this, Callback, State);
+			  new Object[] { methodName }, this, callback, state);
 		}
 
-		public Array EndSystemMethodSignature(IAsyncResult AsyncResult)
+		public Array EndSystemMethodSignature(IAsyncResult asyncResult)
 		{
-			return (Array)EndInvoke(AsyncResult);
+			return (Array)EndInvoke(asyncResult);
 		}
 
 		[XmlRpcMethod("system.methodHelp")]
-		public string SystemMethodHelp(string MethodName)
+		public string SystemMethodHelp(string methodName)
 		{
 			return (string)Invoke("SystemMethodHelp",
-			  new Object[] { MethodName });
+			  new Object[] { methodName });
 		}
 
 		[XmlRpcMethod("system.methodHelp")]
 		public IAsyncResult BeginSystemMethodHelp(
-		  string MethodName,
-		  AsyncCallback Callback,
-		  object State)
+		  string methodName,
+		  AsyncCallback callback,
+		  object state)
 		{
 			return BeginInvoke("SystemMethodHelp",
-			  new Object[] { MethodName }, this, Callback, State);
+			  new object[] { methodName }, this, callback, state);
 		}
 
-		public string EndSystemMethodHelp(IAsyncResult AsyncResult)
+		public string EndSystemMethodHelp(IAsyncResult asyncResult)
 		{
-			return (string)EndInvoke(AsyncResult);
+			return (string)EndInvoke(asyncResult);
 		}
 		#endregion
 
@@ -958,13 +815,13 @@ namespace CookComputing.XmlRpc
 
 		protected virtual WebRequest GetWebRequest(Uri uri)
 		{
-			WebRequest req = WebRequest.Create(uri);
+			var req = WebRequest.Create(uri);
 			return req;
 		}
 
 		protected virtual WebResponse GetWebResponse(WebRequest request)
 		{
-			WebResponse ret = null;
+			WebResponse ret;
 			try
 			{
 				ret = request.GetResponse();
@@ -984,8 +841,7 @@ namespace CookComputing.XmlRpc
 		  Stream respStream)
 		{
 			Stream decodedStream;
-			string contentEncoding = httpWebResp.ContentEncoding.ToLower();
-			string coen = httpWebResp.Headers["Content-Encoding"];
+			var contentEncoding = httpWebResp.ContentEncoding.ToLower();
 			if (contentEncoding.Contains("gzip"))
 			{
 				decodedStream = new System.IO.Compression.GZipStream(respStream,
@@ -1014,23 +870,14 @@ namespace CookComputing.XmlRpc
 
 		protected virtual void OnRequest(XmlRpcRequestEventArgs e)
 		{
-			if (RequestEvent != null)
-			{
-				RequestEvent(this, e);
-			}
+			RequestEvent?.Invoke(this, e);
 		}
 
-		internal bool LogResponse
-		{
-			get { return ResponseEvent != null; }
-		}
+		internal bool LogResponse => ResponseEvent != null;
 
 		protected virtual void OnResponse(XmlRpcResponseEventArgs e)
 		{
-			if (ResponseEvent != null)
-			{
-				ResponseEvent(this, e);
-			}
+			ResponseEvent?.Invoke(this, e);
 		}
 
 		internal void InternalOnResponse(XmlRpcResponseEventArgs e)
