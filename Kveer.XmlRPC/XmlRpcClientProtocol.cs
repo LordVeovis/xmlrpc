@@ -841,7 +841,7 @@ namespace CookComputing.XmlRpc
 		  Stream respStream)
 		{
 			Stream decodedStream;
-			var contentEncoding = httpWebResp.ContentEncoding.ToLower();
+			var contentEncoding = (httpWebResp.ContentEncoding ?? "").ToLower();
 			if (contentEncoding.Contains("gzip"))
 			{
 				decodedStream = new System.IO.Compression.GZipStream(respStream,
