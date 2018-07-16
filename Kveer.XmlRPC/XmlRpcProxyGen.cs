@@ -34,7 +34,7 @@ namespace CookComputing.XmlRpc
 
 	public class XmlRpcProxyGen
 	{
-		static readonly IDictionary<Type, Type> s_types = new Dictionary<Type,Type>();
+		static readonly IDictionary<Type, Type> s_types = new Dictionary<Type, Type>();
 
 #if (!FX1_0)
 		public static T Create<T>()
@@ -49,8 +49,7 @@ namespace CookComputing.XmlRpc
 			Type proxyType;
 			lock (typeof(XmlRpcProxyGen))
 			{
-				proxyType = s_types[itf];
-				if (proxyType == null)
+				if (!s_types.TryGetValue(itf, out proxyType))
 				{
 					Guid guid = Guid.NewGuid();
 					string assemblyName = "XmlRpcProxy" + guid;
@@ -101,7 +100,7 @@ namespace CookComputing.XmlRpc
 			  typeName,
 			  TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public,
 			  typeof(XmlRpcClientProtocol),
-			  new [] { itf });
+			  new[] { itf });
 			BuildConstructor(typeBldr, typeof(XmlRpcClientProtocol), urlString);
 			BuildMethods(typeBldr, methods);
 			BuildBeginMethods(typeBldr, beginMethods);
@@ -195,7 +194,7 @@ namespace CookComputing.XmlRpc
 				ilgen.Emit(OpCodes.Stelem_Ref);
 			}
 			// call Invoke on base class
-			var invokeTypes = new [] { typeof(MethodInfo), typeof(object[]) };
+			var invokeTypes = new[] { typeof(MethodInfo), typeof(object[]) };
 			MethodInfo invokeMethod
 			  = typeof(XmlRpcClientProtocol).GetMethod("Invoke", invokeTypes);
 			ilgen.Emit(OpCodes.Ldarg_0);
@@ -254,7 +253,7 @@ namespace CookComputing.XmlRpc
 				  mi.ReturnType,
 				  argTypes);
 				// add attribute to method
-				var oneString = new [] { typeof(string) };
+				var oneString = new[] { typeof(string) };
 				Type methodAttr = typeof(XmlRpcBeginAttribute);
 				ConstructorInfo ci = methodAttr.GetConstructor(oneString);
 				CustomAttributeBuilder cab =
@@ -299,7 +298,7 @@ namespace CookComputing.XmlRpc
 					ilgen.Emit(OpCodes.Stloc, objValue);
 				}
 				// emit code to call BeginInvoke on base class
-				var invokeTypes = new []
+				var invokeTypes = new[]
 			  {
 		typeof(MethodInfo),
 		typeof(object[]),
@@ -443,7 +442,7 @@ namespace CookComputing.XmlRpc
 				return methods;
 			}
 
-			var result = (IEnumerable<MethodInfo>) methods;
+			var result = (IEnumerable<MethodInfo>)methods;
 			foreach (var itf in type.GetInterfaces())
 			{
 				result = result.Concat(itf.GetMethods());
