@@ -13,7 +13,7 @@ build-master:
     - dotnet restore "${project_name}.csproj"
     - dotnet build -c "${configuration}" "${project_name}.csproj"
     - dotnet pack -c "${configuration}" --include-symbols "${project_name}.csproj"
-    - dotnet nuget push "${project_name}"/bin/"${configuration}"/*.nupkg $nuget_key -s nuget.org
-    - dotnet nuget push "${project_name}"/bin/"${configuration}"/*.symbols.nupkg $nuget_key 
+    - dotnet nuget push bin/"${configuration}"/*.nupkg -k $nuget_key -s nuget.org
+    - dotnet nuget push bin/"${configuration}"/*.symbols.nupkg -k $nuget_key 
   only:
     - master
