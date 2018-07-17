@@ -14,6 +14,6 @@ build-master:
     - dotnet build -c "${configuration}" "${project_name}.csproj"
     - dotnet pack -c "${configuration}" --include-symbols "${project_name}.csproj"
     - dotnet nuget push bin/"${configuration}"/*.nupkg -k $nuget_key -s nuget.org
-    - dotnet nuget push bin/"${configuration}"/*.symbols.nupkg -k $nuget_key 
+    - dotnet nuget push bin/"${configuration}"/*.symbols.nupkg -k $nuget_key -s nuget.org
   only:
     - master
