@@ -2,14 +2,18 @@
 # Official docker image.
 image: microsoft/dotnet:2.1-sdk-alpine
 
+environment:
+  project_name: Kveer.XmlRPC
+  configuration: Release
 
 build-master:
   stage: build
   script:
-    - dotnet restore Kveer.XmlRPC/Kveer.XmlRPC.csproj
-    - dotnet build -c Release Kveer.XmlRPC/Kveer.XmlRPC.csproj
-    - dotnet pack -c Release --include-symbols Kveer.XmlRPC/Kveer.XmlRPC.csproj
-    - dotnet nuget push Kveer.XmlRPC/bin/Release/*.nupkg $nuget_key
-    - dotnet nuget push Kveer.XmlRPC/bin/Release/*.symbols.nupkg $nuget_key
+    - cd "${project_name}"
+    - dotnet restore "${project_name}.csproj"
+    - dotnet build -c "${configuration}" "${project_name}.csproj"
+    - dotnet pack -c "${configuration}" --include-symbols "${project_name}.csproj"
+    - dotnet nuget push "${project_name}"/bin/"${configuration}"/*.nupkg $nuget_key -s nuget.org
+    - dotnet nuget push "${project_name}"/bin/"${configuration}"/*.symbols.nupkg $nuget_key 
   only:
     - master
