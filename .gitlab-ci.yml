@@ -2,7 +2,7 @@
 # Official docker image.
 image: microsoft/dotnet:2.1-sdk-alpine
 
-environment:
+variables:
   project_name: Kveer.XmlRPC
   configuration: Release
 
