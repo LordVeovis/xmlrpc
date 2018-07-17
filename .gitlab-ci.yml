@@ -7,7 +7,7 @@ build-master:
   stage: build
   script:
     - dotnet restore Kveer.XmlRPC/Kveer.XmlRPC.csproj
-    - dotnet build -c Release -o /app Kveer.XmlRPC/Kveer.XmlRPC.csproj
+    - dotnet build -c Release Kveer.XmlRPC/Kveer.XmlRPC.csproj
     - dotnet pack -c Release --include-symbols Kveer.XmlRPC/Kveer.XmlRPC.csproj
     - dotnet nuget push /app/*.nupkg $nuget_key
     - dotnet nuget push /app/*.symbols.nupkg $nuget_key
