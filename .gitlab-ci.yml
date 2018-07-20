@@ -18,14 +18,15 @@ build-master:
   only:
     - master
 
-services:
-  - docker:stable-dind
 sast:
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
   allow_failure: true
+  services:
+    - docker:stable-dind
   before_script:
+    - sleep 600
     - docker info
     - docker ps
   script:
