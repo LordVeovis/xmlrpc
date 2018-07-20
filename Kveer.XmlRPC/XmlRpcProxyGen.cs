@@ -105,7 +105,7 @@ namespace CookComputing.XmlRpc
 			BuildMethods(typeBldr, methods);
 			BuildBeginMethods(typeBldr, beginMethods);
 			BuildEndMethods(typeBldr, endMethods);
-			typeBldr.CreateType();
+			typeBldr.CreateTypeInfo();
 			return assBldr;
 		}
 
