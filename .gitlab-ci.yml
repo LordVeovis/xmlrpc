@@ -26,6 +26,9 @@ sast:
   allow_failure: true
   services:
     - docker:stable-dind
+  before_script:
+    - docker info
+    - docker ps
   script:
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
     - docker run
