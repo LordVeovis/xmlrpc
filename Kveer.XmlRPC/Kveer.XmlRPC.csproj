@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>CookComputing.XmlRpc</RootNamespace>
     <Authors>Sébastien Rault</Authors>
     <Company>Kveer</Company>
@@ -9,7 +9,7 @@
     <Copyright>Sébastien Rault</Copyright>
     <SignAssembly>false</SignAssembly>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>- publish the symbols on https://nuget.smbsrc.net
 - fully automate the build</PackageReleaseNotes>
