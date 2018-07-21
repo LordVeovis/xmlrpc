@@ -15,7 +15,7 @@ build:
     - dotnet pack -c "${configuration}" --include-symbols "${project_name}.csproj"
   artifacts:
     paths:
-      - $PWD/bin/"${configuration}"/*.nupkg
+      - $PWD/${project_name}/bin/${configuration}/*.nupkg
   only:
     - master
     - tags
