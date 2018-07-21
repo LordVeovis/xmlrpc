@@ -22,7 +22,7 @@ build:
 
 publish-nuget:
   stage: deploy
-  dependencides:
+  dependencies:
     - build
   before_script:
     - apk add --no-cache git xmlstarlet
