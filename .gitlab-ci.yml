@@ -20,8 +20,6 @@ build-master:
 
 sast:
   image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
   allow_failure: true
   services:
     - docker:stable-dind
@@ -29,8 +27,9 @@ sast:
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
     - docker run
         --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}"
-        --volume "$PWD/${project_name}:/code"
+        --env SAST_ANALYZER_IMAGES=security-code-scan
+        --volume "$PWD:/code"
         --volume /var/run/docker.sock:/var/run/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/run /code
   artifacts:
-    paths: ["$PWD/${project_name}/gl-sast-report.json"]
+    paths: [gl-sast-report.json]
