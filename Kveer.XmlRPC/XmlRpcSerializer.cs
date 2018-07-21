@@ -32,6 +32,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace CookComputing.XmlRpc
@@ -883,7 +884,7 @@ namespace CookComputing.XmlRpc
 			// create map of field names and remove each name from it as 
 			// processed so we can determine which fields are missing
 			// TODO: replace HashTable with lighter collection
-			var names = new Dictionary<string,string>();
+			var names = new Dictionary<string, string>();
 			foreach (var fi in valueType.GetFields())
 			{
 				if (Attribute.IsDefined(fi, typeof(NonSerializedAttribute)))
@@ -1111,7 +1112,7 @@ namespace CookComputing.XmlRpc
 													typeof(XmlRpcMissingMappingAttribute));
 			}
 
-			return ((XmlRpcMissingMappingAttribute) attr)?.Action ?? currentAction;
+			return ((XmlRpcMissingMappingAttribute)attr)?.Action ?? currentAction;
 		}
 
 		private object ParseHashtable(
@@ -1561,6 +1562,10 @@ namespace CookComputing.XmlRpc
       }
       return null;
 #else
+			var rgx = new Regex(@"^(?:[a-zA-Z0-9]+|*)$");
+			if (!rgx.IsMatch(name))
+				throw new ArgumentException("The parameter is neither a valid tag name nor '*'", nameof(name));
+
 			return node.SelectSingleNode(name);
 #endif
 		}
