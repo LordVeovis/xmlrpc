@@ -34,6 +34,9 @@ publish-nuget:
     - build
   script:
     - cd "${project_name}"
+    - ls -Rlh bin/"${configuration}"/
+    - env
+    - ls bin/"${configuration}"/${project_name}.$CI_COMMIT_TAG.nupkg
     - dotnet nuget push bin/"${configuration}"/${project_name}.$CI_COMMIT_TAG.nupkg -k $nuget_key -s nuget.org
     - dotnet nuget push bin/"${configuration}"/${project_name}.$CI_COMMIT_TAG.symbols.nupkg -k $nuget_key -s https://nuget.smbsrc.net/
   only:
