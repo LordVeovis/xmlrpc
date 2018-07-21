@@ -31,6 +31,8 @@ publish-nuget:
     - MSG=$(git tag -l --format='%(contents)' $CI_COMMIT_TAG | xmlstarlet esc)
     - xmlstarlet ed --inplace -u '/Project/PropertyGroup/Version' -v "$CI_COMMIT_TAG" "${project_name}.csproj"
     - xmlstarlet ed --inplace -u '/Project/PropertyGroup/PackageReleaseNotes' -v "$MSG" "${project_name}.csproj"
+    - ls bin/"${configuration}"
+    - ls bin/"${configuration}"/${project_name}.$CI_COMMIT_TAG.nupkg
     - dotnet nuget push bin/"${configuration}"/${project_name}.$CI_COMMIT_TAG.nupkg -k $nuget_key -s nuget.org
     - dotnet nuget push bin/"${configuration}"/${project_name}.$CI_COMMIT_TAG.symbols.nupkg -k $nuget_key -s https://nuget.smbsrc.net/
   only:
