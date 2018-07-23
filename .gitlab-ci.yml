@@ -28,6 +28,14 @@ build:
     - master
     - tags
 
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - cd "${project_name}.Tests"
+    - dotnet test "${project_name}.Tests.csproj"
+  
 publish-nuget:
   stage: deploy
   dependencies:
