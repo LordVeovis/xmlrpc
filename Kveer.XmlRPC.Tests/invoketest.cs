@@ -88,7 +88,7 @@ internal class StateName : XmlRpcClientProtocol
 	}
 }
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	//[TestFixture]
 	//public class InvokeTest

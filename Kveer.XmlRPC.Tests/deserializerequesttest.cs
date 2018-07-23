@@ -5,7 +5,7 @@ using System.Threading;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	[TestFixture]
 	public class DeserializeRequestTest

@@ -8,7 +8,7 @@ using NUnit.Framework;
 // TODO: parse XmlRpcStruct derived
 // TODO: array of base64
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	[TestFixture]
 	public class ParseTest

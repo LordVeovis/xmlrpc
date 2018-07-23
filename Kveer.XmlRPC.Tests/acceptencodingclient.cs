@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 #if !FX1_0
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	[TestFixture]
 	public class AcceptEncodingClient

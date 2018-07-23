@@ -3,7 +3,7 @@ using System.Text;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	[TestFixture]
 	public class OptionalSerializeTest

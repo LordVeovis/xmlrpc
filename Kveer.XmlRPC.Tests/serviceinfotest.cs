@@ -2,7 +2,7 @@ using System;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	[TestFixture]
 	public class ServiceInfoTest

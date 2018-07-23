@@ -8,7 +8,7 @@ using System.Xml;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 
 // TODO: test any culture dependencies
 {

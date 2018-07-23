@@ -18,7 +18,7 @@ internal class XmlRpcStruct1 : XmlRpcStruct
 	public int mi;
 }
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	[TestFixture]
 	public class OptionalDeserializeTest

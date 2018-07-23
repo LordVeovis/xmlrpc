@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using CookComputing.XmlRpc;
 
-namespace ntest
+namespace Kveer.XmlRPC.Tests
 {
 	public class Utils
 	{
