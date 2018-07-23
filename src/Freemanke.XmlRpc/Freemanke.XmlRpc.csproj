@@ -3,21 +3,21 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>CookComputing.XmlRpc</RootNamespace>
-    <Authors>Sébastien Rault</Authors>
-    <Company>Kveer</Company>
-    <Description>A port of CookComputing.XmlRpcV2 for dotnet core 2.</Description>
-    <Copyright>Sébastien Rault</Copyright>
+    <Authors>Freeman Ke</Authors>
+    <Company>Freeman Ke</Company>
+    <Description>A port of CookComputing.XmlRpcV2 for .net core</Description>
+    <Copyright>Freeman Ke</Copyright>
     <SignAssembly>false</SignAssembly>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>- publish the symbols on https://nuget.smbsrc.net
-- fully automate the build</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
-    <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/freemanke/xmlrpc</PackageProjectUrl>
+    <RepositoryUrl>git@github.com:freemanke/xmlrpc.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <AssemblyName>FreemanKe.XmlRpc</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
