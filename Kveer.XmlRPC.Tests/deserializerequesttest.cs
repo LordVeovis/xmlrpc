@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using CookComputing.XmlRpc;
+using Kveer.XmlRPC.Tests.Properties;
 using NUnit.Framework;
 
 namespace Kveer.XmlRPC.Tests
@@ -728,8 +729,7 @@ AQIDBAUGBwg=</base64>
 		[Test]
 		public void ISO_8859_1()
 		{
-			using (Stream stm = new FileStream("../iso-8859-1_request.xml",
-											   FileMode.Open, FileAccess.Read))
+			using (var stm = new MemoryStream(Resources.iso_8859_1_request))
 			{
 				var serializer = new XmlRpcSerializer();
 				var request    = serializer.DeserializeRequest(stm, null);

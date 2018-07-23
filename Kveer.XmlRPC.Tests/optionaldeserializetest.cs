@@ -334,7 +334,7 @@ namespace Kveer.XmlRPC.Tests
 			Assert.AreEqual(new DateTime(2002, 7, 7, 11, 25, 37), ((Struct1) obj).mdt, "dateTime member");
 // TODO:      Assert.AreEqual(null, ((Struct1)obj).mb64, "base64 member");
 // TODO:       Assert.AreEqual(null, ((Struct1)obj).ma, "array member");
-			Assert.AreEqual(23456, ((Struct1) obj).xi, "XmlRpcInt member");
+			Assert.AreEqual((XmlRpcInt)23456, ((Struct1) obj).xi, "XmlRpcInt member");
 			Assert.IsTrue(true == ((Struct1) obj).xb);
 			Assert.IsTrue(2345.678 == ((Struct1) obj).xd);
 			Assert.IsTrue(new DateTime(2003, 8, 8, 11, 25, 37).Equals(((Struct1) obj).xdt));

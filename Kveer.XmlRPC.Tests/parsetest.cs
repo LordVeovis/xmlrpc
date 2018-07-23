@@ -873,12 +873,8 @@ namespace Kveer.XmlRPC.Tests
     </member>
   </struct>
 </value>";
-			var obj = Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
-								  out parsedType, out parsedArrayType);
-			var ret = (Struct4) obj;
-			Assert.That(ret.x, Throws.TypeOf<XmlRpcNonSerializedMember>());
-			//Assert.AreEqual(0, ret.x);
-			//Assert.AreEqual(18, ret.y);
+			Assert.That(() => Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
+									out parsedType, out parsedArrayType), Throws.TypeOf<XmlRpcNonSerializedMember>());
 		}
 
 		[Test]
@@ -1193,7 +1189,7 @@ namespace Kveer.XmlRPC.Tests
 			var obj = Utils.Parse(xml, typeof(XmlRpcInt), MappingAction.Error,
 								  out parsedType, out parsedArrayType);
 			Assert.IsInstanceOf<XmlRpcInt>(obj);
-			Assert.AreEqual(12345, (XmlRpcInt) obj);
+			Assert.AreEqual((XmlRpcInt) 12345, obj);
 		}
 
 		//---------------------- XmlRpcStruct array ----------------------------// 

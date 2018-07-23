@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using CookComputing.XmlRpc;
+using Kveer.XmlRPC.Tests.Properties;
 using NUnit.Framework;
 
 namespace Kveer.XmlRPC.Tests
@@ -724,8 +725,7 @@ This should be ignored.
 		[Test]
 		public void ISO_8869_1()
 		{
-			using (Stream stm = new FileStream("../iso-8859-1_response.xml",
-											   FileMode.Open, FileAccess.Read))
+			using (var stm = new MemoryStream(Resources.iso_8859_1_response))
 			{
 				var serializer = new XmlRpcSerializer();
 				var response

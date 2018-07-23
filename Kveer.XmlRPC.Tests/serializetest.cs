@@ -159,7 +159,7 @@ namespace Kveer.XmlRPC.Tests
 		[Test]
 		public void Base64()
 		{
-			var testb = new []
+			var testb = new byte[]
 			{
 				121, 111, 117, 32, 99, 97, 110, 39, 116, 32, 114, 101, 97, 100,
 				32, 116, 104, 105, 115, 33

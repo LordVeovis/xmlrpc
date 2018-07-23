@@ -49,6 +49,11 @@
     <Compile Include="optionalserializetest.cs" />
     <Compile Include="paramstest.cs" />
     <Compile Include="parsetest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="serializeresponsetest.cs" />
     <Compile Include="serializetest.cs" />
     <Compile Include="serviceinfotest.cs" />
@@ -68,6 +73,13 @@
       <Project>{dda79d67-2320-40cd-8089-51a3061023f5}</Project>
       <Name>Kveer.XmlRPC</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
