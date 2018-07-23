@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Kveer.XmlRPC.Tests</RootNamespace>
+    <Authors>Sébastien Rault</Authors>
+    <Company>Kveer</Company>
+    <Description>Unit tests for Kveer.XmlRPC</Description>
+    <Copyright>Sébastien Rault</Copyright>
+    <SignAssembly>false</SignAssembly>
+    <PackageTags>xmlrpc</PackageTags>
+    <Version>1.0.3</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
+    <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Listener.cs" />
+    <Compile Remove="listenertest.cs" />
+    <Compile Remove="proxygentest.cs" />
+    <Compile Remove="remotingservertest.cs" />
+    <Compile Remove="ServerProtocol.cs" />
+    <Compile Remove="StateNameListener.cs" />
+    <Compile Remove="StateNameService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kveer.XmlRPC\Kveer.XmlRPC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="invoketest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="iso-8859-1_request.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="iso-8859-1_response.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
