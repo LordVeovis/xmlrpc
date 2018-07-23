@@ -579,10 +579,6 @@ namespace Kveer.XmlRPC.Tests
       <value>
         <struct>
           <member>
-            <name>Level</name>
-            <value>1</value>
-          </member>
-          <member>
             <name>childExamples</name>
             <value>
               <array>
@@ -590,10 +586,6 @@ namespace Kveer.XmlRPC.Tests
                   <value>
                     <struct>
                       <member>
-                        <name>Level</name>
-                        <value>1-1</value>
-                      </member>
-                      <member>
                         <name>childExamples</name>
                         <value>
                           <array>
@@ -601,26 +593,22 @@ namespace Kveer.XmlRPC.Tests
                               <value>
                                 <struct>
                                   <member>
-                                    <name>Level</name>
-                                    <value>1-1-1</value>
-                                  </member>
-                                  <member>
                                     <name>childExamples</name>
                                     <value>
                                       <array>
                                         <data />
                                       </array>
                                     </value>
+                                  </member>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-1-1</value>
                                   </member>
                                 </struct>
                               </value>
                               <value>
                                 <struct>
                                   <member>
-                                    <name>Level</name>
-                                    <value>1-1-2</value>
-                                  </member>
-                                  <member>
                                     <name>childExamples</name>
                                     <value>
                                       <array>
@@ -628,21 +616,25 @@ namespace Kveer.XmlRPC.Tests
                                       </array>
                                     </value>
                                   </member>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-1-2</value>
+                                  </member>
                                 </struct>
                               </value>
                             </data>
                           </array>
                         </value>
+                      </member>
+                      <member>
+                        <name>Level</name>
+                        <value>1-1</value>
                       </member>
                     </struct>
                   </value>
                   <value>
                     <struct>
                       <member>
-                        <name>Level</name>
-                        <value>1-2</value>
-                      </member>
-                      <member>
                         <name>childExamples</name>
                         <value>
                           <array>
@@ -650,32 +642,32 @@ namespace Kveer.XmlRPC.Tests
                               <value>
                                 <struct>
                                   <member>
-                                    <name>Level</name>
-                                    <value>1-2-1</value>
-                                  </member>
-                                  <member>
                                     <name>childExamples</name>
                                     <value>
                                       <array>
                                         <data />
                                       </array>
                                     </value>
+                                  </member>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-2-1</value>
                                   </member>
                                 </struct>
                               </value>
                               <value>
                                 <struct>
                                   <member>
-                                    <name>Level</name>
-                                    <value>1-2-2</value>
-                                  </member>
-                                  <member>
                                     <name>childExamples</name>
                                     <value>
                                       <array>
                                         <data />
                                       </array>
                                     </value>
+                                  </member>
+                                  <member>
+                                    <name>Level</name>
+                                    <value>1-2-2</value>
                                   </member>
                                 </struct>
                               </value>
@@ -683,11 +675,19 @@ namespace Kveer.XmlRPC.Tests
                           </array>
                         </value>
                       </member>
+                      <member>
+                        <name>Level</name>
+                        <value>1-2</value>
+                      </member>
                     </struct>
                   </value>
                 </data>
               </array>
             </value>
+          </member>
+          <member>
+            <name>Level</name>
+            <value>1</value>
           </member>
         </struct>
       </value>
@@ -730,17 +730,9 @@ namespace Kveer.XmlRPC.Tests
       <value>
         <struct>
           <member>
-            <name>Level</name>
-            <value>1</value>
-          </member>
-          <member>
             <name>childExample</name>
             <value>
               <struct>
-                <member>
-                  <name>Level</name>
-                  <value>2</value>
-                </member>
                 <member>
                   <name>childExample</name>
                   <value>
@@ -752,8 +744,16 @@ namespace Kveer.XmlRPC.Tests
                     </struct>
                   </value>
                 </member>
+                <member>
+                  <name>Level</name>
+                  <value>2</value>
+                </member>
               </struct>
             </value>
+          </member>
+          <member>
+            <name>Level</name>
+            <value>1</value>
           </member>
         </struct>
       </value>
