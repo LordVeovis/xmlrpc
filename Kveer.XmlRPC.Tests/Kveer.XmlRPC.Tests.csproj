@@ -1,92 +1,64 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8EDF4429-251A-416D-BB68-93F227191BCF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Kveer.XmlRPC.Tests</RootNamespace>
-    <AssemblyName>Kveer.XmlRPC.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Authors>Sébastien Rault</Authors>
+    <Company>Kveer</Company>
+    <Description>Unit tests for Kveer.XmlRPC</Description>
+    <Copyright>Sébastien Rault</Copyright>
+    <SignAssembly>false</SignAssembly>
+    <PackageTags>xmlrpc</PackageTags>
+    <Version>1.0.3</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
+    <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="Listener.cs" />
+    <Compile Remove="listenertest.cs" />
+    <Compile Remove="proxygentest.cs" />
+    <Compile Remove="remotingservertest.cs" />
+    <Compile Remove="ServerProtocol.cs" />
+    <Compile Remove="StateNameListener.cs" />
+    <Compile Remove="StateNameService.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="acceptencodingclient.cs" />
-    <Compile Include="deserializerequesttest.cs" />
-    <Compile Include="deserializeresponsetest.cs" />
-    <Compile Include="invoketest.cs">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kveer.XmlRPC\Kveer.XmlRPC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="invoketest.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="optionaldeserializetest.cs" />
-    <Compile Include="optionalserializetest.cs" />
-    <Compile Include="paramstest.cs" />
-    <Compile Include="parsetest.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="serializeresponsetest.cs" />
-    <Compile Include="serializetest.cs" />
-    <Compile Include="serviceinfotest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="utils.cs" />
-    <Compile Include="XmlRpcStructTest.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="packages.config" />
+    <Folder Include="Properties\" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="iso-8859-1_request.xml" />
-    <Content Include="iso-8859-1_response.xml" />
+    <None Update="iso-8859-1_request.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="iso-8859-1_response.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Kveer.XmlRPC\Kveer.XmlRPC.csproj">
-      <Project>{dda79d67-2320-40cd-8089-51a3061023f5}</Project>
-      <Name>Kveer.XmlRPC</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
