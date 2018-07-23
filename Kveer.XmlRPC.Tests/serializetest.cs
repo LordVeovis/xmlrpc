@@ -230,7 +230,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- dateTime ------------------------------------// 
@@ -311,7 +312,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- double ----------------------------------------// 
@@ -365,7 +367,8 @@ namespace Kveer.XmlRPC.Tests
             </value>
         </param>
     </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- int -------------------------------------------// 
@@ -464,7 +467,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -497,7 +501,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- null parameter ----------------------------------// 
@@ -693,7 +698,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -759,7 +765,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- string ----------------------------------------// 
@@ -800,7 +807,8 @@ namespace Kveer.XmlRPC.Tests
             </value>
         </param>
     </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -827,7 +835,8 @@ namespace Kveer.XmlRPC.Tests
             <value>string no string tag</value>
         </param>
     </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -856,7 +865,8 @@ namespace Kveer.XmlRPC.Tests
             </value>
         </param>
     </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -940,7 +950,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -983,7 +994,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -1062,7 +1074,7 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>".Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -1119,7 +1131,8 @@ namespace Kveer.XmlRPC.Tests
             </value>
         </param>
     </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- XmlRpcBoolean --------------------------------// 
@@ -1236,7 +1249,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		//---------------------- XmlRpcStruct ------------------------------------// 

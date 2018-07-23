@@ -134,7 +134,7 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>";
+</methodCall>".Replace("\r\n", Environment.NewLine);
 
 		[Test]
 		public void BuildProxy()
@@ -439,7 +439,7 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>".Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -476,7 +476,7 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>".Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -542,7 +542,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -574,7 +575,8 @@ namespace Kveer.XmlRPC.Tests
       </value>
     </param>
   </params>
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -595,7 +597,8 @@ namespace Kveer.XmlRPC.Tests
 <methodCall>
   <methodName>FooZeroParameters</methodName>
   <params />
-</methodCall>", reqstr);
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
 		[Test]
@@ -616,7 +619,8 @@ namespace Kveer.XmlRPC.Tests
 				@"<?xml version=""1.0""?>
 <methodCall>
   <methodName>FooZeroParameters</methodName>
-</methodCall>", reqstr);
+</methodCall>".Replace(
+					"\r\n", Environment.NewLine), reqstr);
 		}
 	}
 }

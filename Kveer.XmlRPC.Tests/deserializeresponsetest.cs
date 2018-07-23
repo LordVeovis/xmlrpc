@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.IO;
 using System.Text;
 using CookComputing.XmlRpc;
@@ -733,8 +733,8 @@ This should be ignored.
 					= serializer.DeserializeResponse(stm, typeof(string));
 				var ret = (string) response.retVal;
 				var nnn = ret.Length;
-				Assert.IsTrue(ret == "hæ hvağ segirğu şá",
-							  "retVal is 'hæ hvağ segirğu şá'");
+				Assert.IsTrue(ret == "hÃ¦ hvaÃ° segirÃ°u Ã¾Ã¡",
+							  "retVal is 'hÃ¦ hvaÃ° segirÃ°u Ã¾Ã¡'");
 			}
 		}
 

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -736,8 +736,8 @@ AQIDBAUGBwg=</base64>
 				var request    = serializer.DeserializeRequest(stm, null);
 				Assert.AreEqual(request.args[0].GetType(), typeof(string),
 								"argument is string");
-				Assert.AreEqual((string) request.args[0], "hæ hvað segirðu þá",
-								"argument is 'hæ hvað segirðu þá'");
+				Assert.AreEqual((string) request.args[0], "hÃ¦ hvaÃ° segirÃ°u Ã¾Ã¡",
+								"argument is 'hÃ¦ hvaÃ° segirÃ°u Ã¾Ã¡'");
 			}
 		}
 
