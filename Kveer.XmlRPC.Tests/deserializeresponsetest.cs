@@ -481,11 +481,11 @@ This should be ignored.
     <value>
       <struct>
         <member>
-          <name>faultCode</name>
+          <name>FaultCode</name>
           <value><int>4</int></value>
         </member>
         <member>
-          <name>faultString</name>
+          <name>FaultString</name>
           <value><string>Too many parameters.</string></value>
         </member>
       </struct>
@@ -516,11 +516,11 @@ This should be ignored.
     <value>
       <struct>
         <member>
-          <name>faultCode</name>
+          <name>FaultCode</name>
           <value><string>4</string></value>
         </member>
         <member>
-          <name>faultString</name>
+          <name>FaultString</name>
           <value><string>Too many parameters.</string></value>
         </member>
       </struct>
