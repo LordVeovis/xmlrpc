@@ -1,2 +1,2 @@
 ./build.sh
-dotnet pack -c "Release" "./src/XmlRpc.Netcore/XmlRpc.Netcore.csproj"
+dotnet pack -c "Release" "./src/FreemanKe.XmlRpc/FreemanKe.XmlRpc.csproj"

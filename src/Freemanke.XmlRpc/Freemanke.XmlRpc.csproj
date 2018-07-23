@@ -5,11 +5,11 @@
     <RootNamespace>CookComputing.XmlRpc</RootNamespace>
     <Authors>Freeman Ke</Authors>
     <Company>Freeman Ke</Company>
-    <Description>A port of CookComputing.XmlRpcV2 for dotnet core 2.</Description>
+    <Description>A port of CookComputing.XmlRpcV2 for .net core</Description>
     <Copyright>Freeman Ke</Copyright>
     <SignAssembly>false</SignAssembly>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/freemanke/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:freemanke/xmlrpc.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyName>Freemanke.Xmlrpc</AssemblyName>
+    <AssemblyName>FreemanKe.XmlRpc</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
