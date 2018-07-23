@@ -16,14 +16,14 @@ namespace ntest
     Listener _listenerDerived = new Listener(new StateNameListnerDerivedService(),
       "http://127.0.0.1:11001/");
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void Setup()
     {
       _listener.Start();
       _listenerDerived.Start();
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void TearDown()
     {
       _listener.Stop();

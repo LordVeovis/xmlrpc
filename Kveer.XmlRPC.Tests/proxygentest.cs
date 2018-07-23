@@ -29,13 +29,13 @@ namespace ntest
   [TestFixture]
   public class ProxyGenTest
   {
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void Setup()
     {
       StateNameService.Start(5678);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void TearDown()
     {
       StateNameService.Stop();

@@ -97,13 +97,13 @@ namespace ntest
   [TestFixture]
   public class InvokeTest
   {
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void Setup()
     {
       StateNameService.Start(8005);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void TearDown()
     {
       StateNameService.Stop();

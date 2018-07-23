@@ -16,7 +16,7 @@ namespace ntest
     HttpListener _lstner;
     string encoding;
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void Setup()
     {
       _lstner = new HttpListener();
@@ -80,7 +80,7 @@ namespace ntest
       }
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void TearDown()
     {
       _running = false;
