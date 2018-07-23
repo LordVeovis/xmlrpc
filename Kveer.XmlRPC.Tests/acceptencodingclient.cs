@@ -88,25 +88,25 @@ namespace ntest
 			_lstner.Stop();
 		}
 
-		[Test]
-		public void DeflateCall()
-		{
-			encoding = "deflate";
-			var proxy = XmlRpcProxyGen.Create<IStateName>();
-			proxy.Url               = "http://127.0.0.1:11002/";
-			proxy.EnableCompression = true;
-			var name = proxy.GetStateName(1);
-		}
+		//[Test]
+		//public void DeflateCall()
+		//{
+		//	encoding = "deflate";
+		//	var proxy = XmlRpcProxyGen.Create<IStateName>();
+		//	proxy.Url               = "http://127.0.0.1:11002/";
+		//	proxy.EnableCompression = true;
+		//	var name = proxy.GetStateName(1);
+		//}
 
-		[Test]
-		public void GZipCall()
-		{
-			encoding = "gzip";
-			var proxy = XmlRpcProxyGen.Create<IStateName>();
-			proxy.Url               = "http://127.0.0.1:11002/";
-			proxy.EnableCompression = true;
-			var name = proxy.GetStateName(1);
-		}
+		//[Test]
+		//public void GZipCall()
+		//{
+		//	encoding = "gzip";
+		//	var proxy = XmlRpcProxyGen.Create<IStateName>();
+		//	proxy.Url               = "http://127.0.0.1:11002/";
+		//	proxy.EnableCompression = true;
+		//	var name = proxy.GetStateName(1);
+		//}
 	}
 }
 

@@ -134,7 +134,7 @@ namespace ntest
 			wrtr.Flush();
 			stm.Position = 0;
 			var serializer = new XmlRpcSerializer();
-			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHttpContent;
 			var response = serializer.DeserializeResponse(stm, typeof(int));
 
 			var o = response.retVal;
@@ -165,7 +165,7 @@ namespace ntest
 			stm.Position = 0;
 
 			var serializer = new XmlRpcSerializer();
-			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
+			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHttpContent;
 			var response = serializer.DeserializeResponse(stm, typeof(int));
 
 			var o = response.retVal;
@@ -264,7 +264,6 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void Donhrobjartz_StructMemberDupName()
 		{
 			var xml = @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
@@ -286,13 +285,12 @@ namespace ntest
 			var sr1        = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var response = serializer.DeserializeResponse(sr1,
-														  typeof(Donhrobjartz));
-			var ret = (Donhrobjartz) response.retVal;
+			Assert.That(() => serializer.DeserializeResponse(sr1,
+															 typeof(Donhrobjartz)),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void Donhrobjartz_StructMemberDupValue()
 		{
 			var xml = @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
@@ -314,9 +312,9 @@ namespace ntest
 			var sr1        = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var response = serializer.DeserializeResponse(sr1,
-														  typeof(Donhrobjartz));
-			var ret = (Donhrobjartz) response.retVal;
+			Assert.That(() => serializer.DeserializeResponse(sr1,
+															 typeof(Donhrobjartz)),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
@@ -353,7 +351,6 @@ This should be ignored.
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void Donhrobjartz_XmlRpcStructMemberDupName()
 		{
 			var xml = @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
@@ -375,13 +372,12 @@ This should be ignored.
 			var sr1        = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var response = serializer.DeserializeResponse(sr1,
-														  typeof(XmlRpcStruct));
-			var ret = (XmlRpcStruct) response.retVal;
+			Assert.That(() => serializer.DeserializeResponse(sr1,
+															 typeof(XmlRpcStruct)),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void Donhrobjartz_XmlRpcStructMemberDupValue()
 		{
 			var xml = @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
@@ -403,9 +399,9 @@ This should be ignored.
 			var sr1        = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var response = serializer.DeserializeResponse(sr1,
-														  typeof(XmlRpcStruct));
-			var ret = (XmlRpcStruct) response.retVal;
+			Assert.That(() => serializer.DeserializeResponse(sr1,
+															 typeof(XmlRpcStruct)),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 
@@ -672,7 +668,6 @@ This should be ignored.
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void InvalidHTTPContentLeadingWhiteSpace()
 		{
 			var xml = @"
@@ -693,11 +688,11 @@ This should be ignored.
 			wrtr.Flush();
 			stm.Position = 0;
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(stm, typeof(int));
+			Assert.That(() => serializer.DeserializeResponse(stm, typeof(int)),
+						Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void InvalidXML()
 		{
 			var    xml  = @"response>";
@@ -707,11 +702,11 @@ This should be ignored.
 			wrtr.Flush();
 			stm.Position = 0;
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(stm, typeof(int));
+			Assert.That(() => serializer.DeserializeResponse(stm, typeof(int)),
+						Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void InvalidXMLWithAllowInvalidHTTPContent()
 		{
 			var    xml  = @"response>";
@@ -721,8 +716,9 @@ This should be ignored.
 			wrtr.Flush();
 			stm.Position = 0;
 			var serializer = new XmlRpcSerializer();
-			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-			var response = serializer.DeserializeResponse(stm, typeof(int));
+			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHttpContent;
+			Assert.That(() => serializer.DeserializeResponse(stm, typeof(int)),
+						Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 
 		[Test]
@@ -909,7 +905,6 @@ This should be ignored.
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void OneByteContentAllowInvalidHTTPContent()
 		{
 			var    xml  = @"<";
@@ -919,8 +914,9 @@ This should be ignored.
 			wrtr.Flush();
 			stm.Position = 0;
 			var serializer = new XmlRpcSerializer();
-			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-			var response = serializer.DeserializeResponse(stm, typeof(int));
+			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHttpContent;
+			Assert.That(() => serializer.DeserializeResponse(stm, typeof(int)),
+						Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 
 		[Test]
@@ -1207,7 +1203,6 @@ This should be ignored.
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcTypeMismatchException))]
 		public void StructContainingArrayError()
 		{
 			var xml = @"<?xml version=""1.0"" encoding=""iso-8859-1""?>
@@ -1265,8 +1260,9 @@ This should be ignored.
 			var sr1        = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var response = serializer.DeserializeResponse(sr1,
-														  typeof(Category[]));
+			Assert.That(() => serializer.DeserializeResponse(sr1,
+															 typeof(Category[])),
+						Throws.TypeOf<XmlRpcTypeMismatchException>());
 		}
 
 		[Test]
@@ -1383,7 +1379,6 @@ This should be ignored.
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void ZeroByteContentAllowInvalidHTTPContent()
 		{
 			var    xml  = @"";
@@ -1393,8 +1388,9 @@ This should be ignored.
 			wrtr.Flush();
 			stm.Position = 0;
 			var serializer = new XmlRpcSerializer();
-			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHTTPContent;
-			var response = serializer.DeserializeResponse(stm, typeof(int));
+			serializer.NonStandard = XmlRpcNonStandard.AllowInvalidHttpContent;
+			Assert.That(() => serializer.DeserializeResponse(stm, typeof(int)),
+						Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 	}
 }

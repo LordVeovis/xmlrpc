@@ -17,20 +17,18 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void AddInvalidKey()
 		{
 			var xps = new XmlRpcStruct();
-			xps.Add(1, "abcdef");
+			Assert.That(() => xps.Add(1, "abcdef"), Throws.ArgumentException);
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void DoubleAdd()
 		{
 			var xps = new XmlRpcStruct();
 			xps.Add("foo", "123456");
-			xps.Add("foo", "abcdef");
+			Assert.That(() => xps.Add("foo", "abcdef"), Throws.ArgumentException);
 		}
 
 		[Test]
@@ -53,21 +51,21 @@ namespace ntest
 			enumerator.MoveNext();
 			Assert.AreEqual("1", enumerator.Key);
 			Assert.AreEqual("a", enumerator.Value);
-			Assert.IsInstanceOfType(typeof(DictionaryEntry), enumerator.Current);
+			Assert.IsInstanceOf<DictionaryEntry>(enumerator.Current);
 			var de = (DictionaryEntry) enumerator.Current;
 			Assert.AreEqual("1", de.Key);
 			Assert.AreEqual("a", de.Value);
 			enumerator.MoveNext();
 			Assert.AreEqual("3", enumerator.Key);
 			Assert.AreEqual("c", enumerator.Value);
-			Assert.IsInstanceOfType(typeof(DictionaryEntry), enumerator.Current);
+			Assert.IsInstanceOf<DictionaryEntry>(enumerator.Current);
 			de = (DictionaryEntry) enumerator.Current;
 			Assert.AreEqual("3", de.Key);
 			Assert.AreEqual("c", de.Value);
 			enumerator.MoveNext();
 			Assert.AreEqual("2", enumerator.Key);
 			Assert.AreEqual("b", enumerator.Value);
-			Assert.IsInstanceOfType(typeof(DictionaryEntry), enumerator.Current);
+			Assert.IsInstanceOf<DictionaryEntry>(enumerator.Current);
 			de = (DictionaryEntry) enumerator.Current;
 			Assert.AreEqual("2", de.Key);
 			Assert.AreEqual("b", de.Value);
@@ -116,11 +114,10 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void SetInvalidKey()
 		{
 			var xps = new XmlRpcStruct();
-			xps[1] = "abcdef";
+			Assert.That(() => xps[1] = "abcdef", Throws.ArgumentException);
 		}
 	}
 }

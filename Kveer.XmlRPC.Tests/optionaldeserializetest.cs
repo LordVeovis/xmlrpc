@@ -278,7 +278,6 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcTypeMismatchException))]
 		public void NoInnerStructOverrideIgnoreError()
 		{
 			Type parsedType, parsedArrayType;
@@ -291,9 +290,8 @@ namespace ntest
           </member>
         </struct>
       </value>";
-			var obj = Utils.Parse(xml, typeof(StructOuter1), MappingAction.Error,
-								  out parsedType, out parsedArrayType);
-			Assert.Fail("didn't detect missing members");
+			Assert.That(() => Utils.Parse(xml, typeof(StructOuter1), MappingAction.Error,
+								  out parsedType, out parsedArrayType), Throws.TypeOf<XmlRpcTypeMismatchException>());
 		}
 
 		[Test]
@@ -350,14 +348,12 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcTypeMismatchException))]
 		public void Struct1_AllMissing_Error()
 		{
 			Type parsedType, parsedArrayType;
 			var  xml = @"<?xml version=""1.0"" ?><value><struct></struct></value>";
-			var obj = Utils.Parse(xml, typeof(Struct1), MappingAction.Error,
-								  out parsedType, out parsedArrayType);
-			Assert.Fail("didn't detect missing members");
+			Assert.That(() => Utils.Parse(xml, typeof(Struct1), MappingAction.Error,
+								  out parsedType, out parsedArrayType), Throws.TypeOf<XmlRpcTypeMismatchException>());
 		}
 
 		[Test]

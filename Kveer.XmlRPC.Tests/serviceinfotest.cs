@@ -119,11 +119,10 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcDupXmlRpcMethodNames))]
 		public void DupXmlRpcNames()
 		{
-			var svcinfo = XmlRpcServiceInfo.CreateServiceInfo(
-				typeof(IDupXmlRpcNames));
+			Assert.That(() => XmlRpcServiceInfo.CreateServiceInfo(
+				typeof(IDupXmlRpcNames)), Throws.TypeOf<XmlRpcDupXmlRpcMethodNames>());
 		}
 
 		[Test]

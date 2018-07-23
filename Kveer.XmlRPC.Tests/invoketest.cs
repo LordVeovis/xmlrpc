@@ -90,126 +90,124 @@ internal class StateName : XmlRpcClientProtocol
 
 namespace ntest
 {
-	[TestFixture]
-	public class InvokeTest
-	{
-		[OneTimeSetUp]
-		public void Setup()
-		{
-			StateNameService.Start(8005);
-		}
+	//[TestFixture]
+	//public class InvokeTest
+	//{
+	//	[OneTimeSetUp]
+	//	public void Setup()
+	//	{
+	//		StateNameService.Start(8005);
+	//	}
 
-		[OneTimeTearDown]
-		public void TearDown()
-		{
-			StateNameService.Stop();
-		}
+	//	[OneTimeTearDown]
+	//	public void TearDown()
+	//	{
+	//		StateNameService.Stop();
+	//	}
 
-		private class CBInfo
-		{
-			public readonly ManualResetEvent _evt;
-			public          Exception        _excep;
-			public          string           _ret;
+	//	private class CBInfo
+	//	{
+	//		public readonly ManualResetEvent _evt;
+	//		public          Exception        _excep;
+	//		public          string           _ret;
 
-			public CBInfo(ManualResetEvent evt)
-			{
-				_evt = evt;
-			}
-		}
+	//		public CBInfo(ManualResetEvent evt)
+	//		{
+	//			_evt = evt;
+	//		}
+	//	}
 
-		private void StateNameCallback(IAsyncResult asr)
-		{
-			var clientResult = (XmlRpcAsyncResult) asr;
-			var proxy        = (StateName) clientResult.ClientProtocol;
-			var info         = (CBInfo) asr.AsyncState;
-			try
-			{
-				info._ret = proxy.EndGetStateName(asr);
-			}
-			catch (Exception ex)
-			{
-				info._excep = ex;
-			}
+	//	private void StateNameCallback(IAsyncResult asr)
+	//	{
+	//		var clientResult = (XmlRpcAsyncResult) asr;
+	//		var proxy        = (StateName) clientResult.ClientProtocol;
+	//		var info         = (CBInfo) asr.AsyncState;
+	//		try
+	//		{
+	//			info._ret = proxy.EndGetStateName(asr);
+	//		}
+	//		catch (Exception ex)
+	//		{
+	//			info._excep = ex;
+	//		}
 
-			info._evt.Set();
-		}
+	//		info._evt.Set();
+	//	}
 
-		[Test]
-		public void MakeAsynchronousCallCallBack()
-		{
-			var proxy = new StateName();
-			var evt   = new ManualResetEvent(false);
-			var info  = new CBInfo(evt);
-			var asr3  = proxy.BeginGetStateName(1, StateNameCallback, info);
-			evt.WaitOne();
-			Assert.AreEqual(null, info._excep, "Async call threw exception");
-			Assert.AreEqual("Alabama", info._ret);
-		}
+	//	[Test]
+	//	public void MakeAsynchronousCallCallBack()
+	//	{
+	//		var proxy = new StateName();
+	//		var evt   = new ManualResetEvent(false);
+	//		var info  = new CBInfo(evt);
+	//		var asr3  = proxy.BeginGetStateName(1, StateNameCallback, info);
+	//		evt.WaitOne();
+	//		Assert.AreEqual(null, info._excep, "Async call threw exception");
+	//		Assert.AreEqual("Alabama", info._ret);
+	//	}
 
-		[Test]
-		public void MakeAsynchronousCallIsCompleted()
-		{
-			var proxy = new StateName();
-			var asr1  = proxy.BeginGetStateName(1);
-			while (asr1.IsCompleted == false)
-				Thread.Sleep(10);
-			var ret1 = proxy.EndGetStateName(asr1);
-			Assert.AreEqual("Alabama", ret1);
-		}
+	//	[Test]
+	//	public void MakeAsynchronousCallIsCompleted()
+	//	{
+	//		var proxy = new StateName();
+	//		var asr1  = proxy.BeginGetStateName(1);
+	//		while (asr1.IsCompleted == false)
+	//			Thread.Sleep(10);
+	//		var ret1 = proxy.EndGetStateName(asr1);
+	//		Assert.AreEqual("Alabama", ret1);
+	//	}
 
-		[Test]
-		public void MakeAsynchronousCallWait()
-		{
-			var proxy = new StateName();
-			var asr2  = proxy.BeginGetStateName(1);
-			asr2.AsyncWaitHandle.WaitOne();
-			var ret2 = proxy.EndGetStateName(asr2);
-			Assert.AreEqual("Alabama", ret2);
-		}
+	//	[Test]
+	//	public void MakeAsynchronousCallWait()
+	//	{
+	//		var proxy = new StateName();
+	//		var asr2  = proxy.BeginGetStateName(1);
+	//		asr2.AsyncWaitHandle.WaitOne();
+	//		var ret2 = proxy.EndGetStateName(asr2);
+	//		Assert.AreEqual("Alabama", ret2);
+	//	}
 
-		[Test]
-		public void MakeSynchronousCalls()
-		{
-			var proxy = new StateName();
-			var ret1  = proxy.GetStateNameUsingMethodName(1);
-			Assert.AreEqual("Alabama", ret1);
-			var ret2 = proxy.GetStateNameUsingMethodInfo(1);
-			Assert.AreEqual("Alabama", ret2);
-			var ret3 = proxy.GetStateNameUsingMethodName("1");
-			Assert.AreEqual("Alabama", ret3);
-			var ret4 = proxy.GetStateNameUsingMethodInfo("1");
-			Assert.AreEqual("Alabama", ret4);
-		}
+	//	[Test]
+	//	public void MakeSynchronousCalls()
+	//	{
+	//		var proxy = new StateName();
+	//		var ret1  = proxy.GetStateNameUsingMethodName(1);
+	//		Assert.AreEqual("Alabama", ret1);
+	//		var ret2 = proxy.GetStateNameUsingMethodInfo(1);
+	//		Assert.AreEqual("Alabama", ret2);
+	//		var ret3 = proxy.GetStateNameUsingMethodName("1");
+	//		Assert.AreEqual("Alabama", ret3);
+	//		var ret4 = proxy.GetStateNameUsingMethodInfo("1");
+	//		Assert.AreEqual("Alabama", ret4);
+	//	}
 
-		[Test]
-		public void MakeSystemListMethodsCall()
-		{
-			var proxy = new StateName();
-			var ret   = proxy.SystemListMethods();
-			Assert.AreEqual(3, ret.Length);
-			Assert.AreEqual(ret[0], "examples.getStateName");
-			Assert.AreEqual(ret[1], "examples.getStateNameFromString");
-			Assert.AreEqual(ret[2], "examples.getStateStruct");
-		}
+	//	[Test]
+	//	public void MakeSystemListMethodsCall()
+	//	{
+	//		var proxy = new StateName();
+	//		var ret   = proxy.SystemListMethods();
+	//		Assert.AreEqual(3, ret.Length);
+	//		Assert.AreEqual(ret[0], "examples.getStateName");
+	//		Assert.AreEqual(ret[1], "examples.getStateNameFromString");
+	//		Assert.AreEqual(ret[2], "examples.getStateStruct");
+	//	}
 
-		// TODO: add sync fault exception
-		// TODO: add async fault exception
+	//	// TODO: add sync fault exception
+	//	// TODO: add async fault exception
 
-		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidParametersException))]
-		public void Massimo()
-		{
-			var parms = new object[12] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-			var foo   = new Foo();
-			foo.Send_Param(parms);
-		}
+	//	[Test]
+	//	public void Massimo()
+	//	{
+	//		var parms = new object[12] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+	//		var foo   = new Foo();
+	//		Assert.That(() => foo.Send_Param(parms), Throws.TypeOf<XmlRpcInvalidParametersException>());
+	//	}
 
-		[Test]
-		[ExpectedException(typeof(XmlRpcNullParameterException))]
-		public void NullArg()
-		{
-			var foo = new Foo();
-			foo.Send(null);
-		}
-	}
+	//	[Test]
+	//	public void NullArg()
+	//	{
+	//		var foo = new Foo();
+	//		Assert.That(() => foo.Send(null), Throws.TypeOf<XmlRpcNullParameterException>());
+	//	}
+	//}
 }

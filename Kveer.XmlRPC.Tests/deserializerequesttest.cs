@@ -444,7 +444,6 @@ AQIDBAUGBwg=</base64>
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void EmptyI8()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -458,11 +457,10 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void EmptyInteger()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -476,7 +474,7 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
@@ -499,7 +497,6 @@ AQIDBAUGBwg=</base64>
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void EmptyMethodName()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -513,11 +510,10 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void EmptyParam1()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -529,11 +525,10 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void EmptyParam2()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -546,16 +541,15 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void EmptyRequestStream()
 		{
 			var sr         = new StringReader("");
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 
 		[Test]
@@ -687,7 +681,6 @@ AQIDBAUGBwg=</base64>
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void InvalidI8()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -701,11 +694,10 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void InvalidInteger()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -719,19 +711,17 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
-			Assert.Fail("Invalid integer should cause exception");
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcIllFormedXmlException))]
 		public void InvalidXml()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
 <methodCall> </duffMmethodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
 
 
@@ -770,18 +760,16 @@ AQIDBAUGBwg=</base64>
 
 		// test handling of methodCall element
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void MissingMethodCall()
 		{
 			var xml        = @"<?xml version=""1.0"" ?> <elem/>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		// test handling of methodName element
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void MissingMethodName()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -794,7 +782,7 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		// test handling of params element
@@ -853,7 +841,6 @@ AQIDBAUGBwg=</base64>
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void NegativeOverflowI8()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -867,11 +854,11 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
+
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void NegativeOverflowInteger()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -885,7 +872,7 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		// test handling of params element
@@ -919,16 +906,15 @@ AQIDBAUGBwg=</base64>
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void NullRequestStream()
 		{
 			var    serializer = new XmlRpcSerializer();
 			Stream stm        = null;
-			var    request    = serializer.DeserializeRequest(stm, null);
+			Assert.That(() => serializer.DeserializeRequest(stm, null), Throws.ArgumentNullException);
+
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void OverflowI8()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -942,11 +928,10 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void OverflowInteger()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -960,7 +945,7 @@ AQIDBAUGBwg=</base64>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
@@ -1131,7 +1116,6 @@ AQIDBAUGBwg=</base64>
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidParametersException))]
 		public void TooFewParameters()
 		{
 			var xml = @"<?xml version=""1.0""?>
@@ -1148,11 +1132,11 @@ AQIDBAUGBwg=</base64>
 
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			Assert.That(() => serializer.DeserializeRequest(sr, GetType()), Throws.TypeOf<
+							XmlRpcInvalidParametersException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidParametersException))]
 		public void TooManyParameters()
 		{
 			var xml = @"<?xml version=""1.0""?>
@@ -1181,7 +1165,8 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			Assert.That(() => serializer.DeserializeRequest(sr, GetType()), Throws.TypeOf<
+							XmlRpcInvalidParametersException>());
 		}
 
 		[Test]
@@ -1264,7 +1249,6 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void ZeroLengthMethodName()
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
@@ -1278,7 +1262,8 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<
+							XmlRpcInvalidXmlRpcException>());
 		}
 	}
 }

@@ -173,7 +173,6 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void DeserializeLinisgreEmptyParam()
 		{
 			var xml =
@@ -186,7 +185,8 @@ namespace ntest
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			Assert.That(() => serializer.DeserializeRequest(sr, GetType()),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
@@ -320,7 +320,6 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidParametersException))]
 		public void DeserializeObjectParamsInsufficientParams()
 		{
 			var xml =
@@ -332,7 +331,8 @@ namespace ntest
 </methodCall>";
 			var sr         = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			Assert.That(() => serializer.DeserializeRequest(sr, GetType()),
+						Throws.TypeOf<XmlRpcInvalidParametersException>());
 		}
 
 		[Test]
@@ -482,12 +482,12 @@ namespace ntest
 		[Test]
 		public void SerializeMassimo()
 		{
-			var param1 =
+			var param1 = new object[]
 			{
 				"test/Gain1", "Gain", 1, 1,
 				new[] {0.5}
 			};
-			var param2 =
+			var param2 = new object[]
 			{
 				"test/METER", "P1", 1, 1,
 				new[] {-1.0}

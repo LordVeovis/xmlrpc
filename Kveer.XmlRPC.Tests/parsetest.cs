@@ -229,15 +229,15 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void DateTime_Empty_NonStandard()
 		{
 			Type parsedType, parsedArrayType;
 			var xml = @"<?xml version=""1.0"" ?>
         <value><dateTime.iso8601></dateTime.iso8601></value>";
 			var serializer = new XmlRpcSerializer();
-			var obj = Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
-								  out parsedType, out parsedArrayType);
+			Assert.That(() => Utils.Parse(xml, typeof(DateTime), MappingAction.Error, serializer,
+										  out parsedType, out parsedArrayType),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
@@ -714,14 +714,13 @@ namespace ntest
 
 		//---------------------- Int64 -------------------------------------------// 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void Int_TooLarge()
 		{
 			Type parsedType, parsedArrayType;
 			var  xml = @"<?xml version=""1.0"" ?><value><int>123456789012</int></value>";
-			var obj = Utils.Parse(xml, typeof(int), MappingAction.Error,
-								  out parsedType, out parsedArrayType);
-			Assert.AreEqual(12345, (int) obj);
+			Assert.That(() => Utils.Parse(xml, typeof(int), MappingAction.Error,
+										  out parsedType, out parsedArrayType),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
@@ -840,7 +839,6 @@ namespace ntest
 
 		//---------------------- struct ------------------------------------------// 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidXmlRpcException))]
 		public void NameEmptyString()
 		{
 			Type parsedType, parsedArrayType;
@@ -853,12 +851,12 @@ namespace ntest
     </member>
   </struct>
 </value>";
-			var obj = Utils.Parse(xml, null, MappingAction.Error,
-								  out parsedType, out parsedArrayType);
+			Assert.That(() => Utils.Parse(xml, null, MappingAction.Error,
+										  out parsedType, out parsedArrayType),
+						Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcNonSerializedMember))]
 		public void NonSerializedInStruct()
 		{
 			Type parsedType, parsedArrayType;
@@ -878,8 +876,9 @@ namespace ntest
 			var obj = Utils.Parse(xml, typeof(Struct4), MappingAction.Error,
 								  out parsedType, out parsedArrayType);
 			var ret = (Struct4) obj;
-			Assert.AreEqual(0, ret.x);
-			Assert.AreEqual(18, ret.y);
+			Assert.That(ret.x, Throws.TypeOf<XmlRpcNonSerializedMember>());
+			//Assert.AreEqual(0, ret.x);
+			//Assert.AreEqual(18, ret.y);
 		}
 
 		[Test]
@@ -1193,7 +1192,7 @@ namespace ntest
 			var  xml = @"<?xml version=""1.0"" ?><value><int>12345</int></value>";
 			var obj = Utils.Parse(xml, typeof(XmlRpcInt), MappingAction.Error,
 								  out parsedType, out parsedArrayType);
-			Assert.IsInstanceOfType(typeof(XmlRpcInt), obj);
+			Assert.IsInstanceOf<XmlRpcInt>(obj);
 			Assert.AreEqual(12345, (XmlRpcInt) obj);
 		}
 
@@ -1263,7 +1262,7 @@ namespace ntest
 </value>";
 			var obj = Utils.Parse(xml, typeof(XmlRpcStruct), MappingAction.Error,
 								  out parsedType, out parsedArrayType);
-			Assert.IsInstanceOfType(typeof(XmlRpcStruct), obj);
+			Assert.IsInstanceOf<XmlRpcStruct>(obj);
 			var strct       = obj as XmlRpcStruct;
 			var denumerator = strct.GetEnumerator();
 			denumerator.MoveNext();
@@ -1286,7 +1285,7 @@ namespace ntest
 			var  xml = @"<?xml version=""1.0"" ?><value><int>12345</int></value>";
 			var obj = Utils.Parse(xml, typeof(int?), MappingAction.Error,
 								  out parsedType, out parsedArrayType);
-			Assert.IsInstanceOfType(typeof(int?), obj);
+			Assert.IsInstanceOf<int?>(obj);
 			Assert.AreEqual(12345, obj);
 		}
 

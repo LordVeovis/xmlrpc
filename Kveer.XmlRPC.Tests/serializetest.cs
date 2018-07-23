@@ -141,7 +141,7 @@ namespace ntest
 		[Test]
 		public void Array()
 		{
-			var testary = {12, "Egypt", false};
+			var testary = new object[]{12, "Egypt", false};
 			var xdoc = Utils.Serialize("SerializeTest.testArray",
 									   testary,
 									   Encoding.UTF8, MappingAction.Ignore);
@@ -159,7 +159,7 @@ namespace ntest
 		[Test]
 		public void Base64()
 		{
-			var testb =
+			var testb = new []
 			{
 				121, 111, 117, 32, 99, 97, 110, 39, 116, 32, 114, 101, 97, 100,
 				32, 116, 104, 105, 115, 33
@@ -329,15 +329,15 @@ namespace ntest
 
 		//---------------------- HashTable----------------------------------------// 
 		[Test]
-		[ExpectedException(typeof(XmlRpcUnsupportedTypeException))]
 		public void Hashtable()
 		{
 			var hashtable = new Hashtable();
 			hashtable["mi"] = 34567;
 			hashtable["ms"] = "another test string";
 
-			var xdoc = Utils.Serialize("SerializeTest.testXmlRpcStruct",
-									   hashtable, Encoding.UTF8, MappingAction.Ignore);
+			Assert.That(() => Utils.Serialize("SerializeTest.testXmlRpcStruct",
+											  hashtable, Encoding.UTF8, MappingAction.Ignore),
+						Throws.TypeOf<XmlRpcUnsupportedTypeException>());
 		}
 
 		[Test]
@@ -398,7 +398,7 @@ namespace ntest
 		[Test]
 		public void MultiDimArray()
 		{
-			var myArray = {{1, 2}, {3, 4}};
+			var myArray = new []{new []{1, 2}, new []{3, 4}};
 			var xdoc = Utils.Serialize("SerializeTest.testMultiDimArray",
 									   myArray,
 									   Encoding.UTF8, MappingAction.Ignore);
@@ -502,7 +502,6 @@ namespace ntest
 
 		//---------------------- null parameter ----------------------------------// 
 		[Test]
-		[ExpectedException(typeof(XmlRpcNullParameterException))]
 		public void NullParameter()
 		{
 			Stream stm = new MemoryStream();
@@ -510,7 +509,7 @@ namespace ntest
 			req.args   = new object[] {null};
 			req.method = "Foo";
 			var ser = new XmlRpcSerializer();
-			ser.SerializeRequest(stm, req);
+			Assert.That(() => ser.SerializeRequest(stm, req), Throws.TypeOf<XmlRpcNullParameterException>());
 		}
 
 		[Test]
@@ -863,7 +862,7 @@ namespace ntest
 		[Test]
 		public void StructOrderTest()
 		{
-			var testb =
+			var testb = new byte[]
 			{
 				121, 111, 117, 32, 99, 97, 110, 39, 116, 32, 114, 101, 97, 100,
 				32, 116, 104, 105, 115, 33
@@ -988,7 +987,6 @@ namespace ntest
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidParametersException))]
 		public void StructParamsTooManyParams()
 		{
 			Stream stm = new MemoryStream();
@@ -999,11 +997,10 @@ namespace ntest
 			var ser = new XmlRpcSerializer();
 			ser.Indentation = 2;
 			ser.UseIntTag   = true;
-			ser.SerializeRequest(stm, req);
+			Assert.That(() => ser.SerializeRequest(stm, req), Throws.TypeOf<XmlRpcInvalidParametersException>());
 		}
 
 		[Test]
-		[ExpectedException(typeof(XmlRpcInvalidParametersException))]
 		public void StructParamsWithParams()
 		{
 			Stream stm = new MemoryStream();
@@ -1014,7 +1011,7 @@ namespace ntest
 			var ser = new XmlRpcSerializer();
 			ser.Indentation = 2;
 			ser.UseIntTag   = true;
-			ser.SerializeRequest(stm, req);
+			Assert.That(() => ser.SerializeRequest(stm, req), Throws.TypeOf<XmlRpcInvalidParametersException>());
 		}
 
 		[Test]
@@ -1071,7 +1068,7 @@ namespace ntest
 		[Test]
 		public void StructTest()
 		{
-			var testb =
+			var testb = new byte[]
 			{
 				121, 111, 117, 32, 99, 97, 110, 39, 116, 32, 114, 101, 97, 100,
 				32, 116, 104, 105, 115, 33

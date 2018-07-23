@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.IO;
 using CookComputing.XmlRpc;
 using NUnit.Framework;
