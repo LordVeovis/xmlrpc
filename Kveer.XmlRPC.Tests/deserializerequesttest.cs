@@ -493,7 +493,7 @@ AQIDBAUGBwg=</base64>
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
-			Assert.AreEqual("\r\n", request.args[0]);
+			Assert.AreEqual(Environment.NewLine, request.args[0]);
 		}
 
 		[Test]
