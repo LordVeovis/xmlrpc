@@ -1562,7 +1562,7 @@ namespace CookComputing.XmlRpc
       }
       return null;
 #else
-			var rgx = new Regex(@"^(?:[a-zA-Z0-9]+|*)$");
+			var rgx = new Regex(@"^(?:[a-zA-Z0-9]+|\*)$");
 			if (!rgx.IsMatch(name))
 				throw new ArgumentException("The parameter is neither a valid tag name nor '*'", nameof(name));
 
