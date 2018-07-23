@@ -1,42 +1,36 @@
 using System;
-using System.Data;
-using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Xml;
-using System.Reflection;
-using System.Threading;
-using  NUnit.Framework;
 using CookComputing.XmlRpc;
+using NUnit.Framework;
 
 namespace ntest
 {
-  [TestFixture]
-  public class SerializeResponseTest
-  {
-    [Test]
-    public void PaoloLiveraniProblem()
-    {
-      try
-      {
-        XmlRpcResponse resp = new XmlRpcResponse(new DataSet());
-        Stream responseStream = new MemoryStream();
-        XmlRpcSerializer serializer = new XmlRpcSerializer();
-        serializer.SerializeResponse(responseStream, resp);
-      }
-      catch(XmlRpcInvalidReturnType ex)
-      {
-        string s = ex.Message;
-      }
-    }
+	[TestFixture]
+	public class SerializeResponseTest
+	{
+		private class FooClass
+		{
+			public void Foo()
+			{
+				Console.WriteLine("Foo called");
+			}
+		}
 
-    class FooClass
-    {
-      public void Foo() 
-      {
-        Console.WriteLine("Foo called");
-      }
-    }
+		[Test]
+		public void PaoloLiveraniProblem()
+		{
+			try
+			{
+				var    resp           = new XmlRpcResponse(new DataSet());
+				Stream responseStream = new MemoryStream();
+				var    serializer     = new XmlRpcSerializer();
+				serializer.SerializeResponse(responseStream, resp);
+			}
+			catch (XmlRpcInvalidReturnType ex)
+			{
+				var s = ex.Message;
+			}
+		}
 
 //    [Test]
 //    public void VoidReturn()
@@ -61,5 +55,5 @@ namespace ntest
 //        typeof(string));
 //
 //    }
-  }
+	}
 }
