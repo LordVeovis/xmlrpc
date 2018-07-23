@@ -17,6 +17,7 @@
     <PackageProjectUrl>https://github.com/freemanke/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:freemanke/xmlrpc.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <AssemblyName>Freemanke.Xmlrpc</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

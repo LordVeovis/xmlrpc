@@ -1,2 +1,2 @@
 dotnet restore ./src
-dotnet build ./src
+dotnet build -c "Release" ./src
