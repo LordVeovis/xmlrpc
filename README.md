@@ -1,5 +1,6 @@
 # Kveer.XmlRPC
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/72ed394545f947dca0620204fd223627)](https://app.codacy.com/app/LordVeovis/xmlrpc?utm_source=github.com&utm_medium=referral&utm_content=LordVeovis/xmlrpc&utm_campaign=badger)
 [![Build Status](https://gitlab.kveer.fr/veovis/xmlrpc/badges/master/build.svg)](https://github.com/LordVeovis/xmlrpc)
 [![Nuget Downloads](https://img.shields.io/nuget/dt/Kveer.XmlRpc.svg)](https://www.nuget.org/packages/Kveer.XmlRPC/)
 
