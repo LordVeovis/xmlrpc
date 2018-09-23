@@ -39,12 +39,13 @@ namespace CookComputing.XmlRpc
 			{
 				throw new ArgumentException("XmlRpcStruct key must be a string.");
 			}
-			if (XmlRpcServiceInfo.GetXmlRpcType(value.GetType())
+
+			if (value != null && XmlRpcServiceInfo.GetXmlRpcType(value.GetType())
 				== XmlRpcType.tInvalid)
 			{
-				throw new ArgumentException(string.Format(
-				  "Type {0} cannot be mapped to an XML-RPC type", value.GetType()));
+				throw new ArgumentException($"Type {value.GetType()} cannot be mapped to an XML-RPC type");
 			}
+
 			base.Add(key, value);
 			_keys.Add(key);
 			_values.Add(value);
@@ -62,8 +63,7 @@ namespace CookComputing.XmlRpc
 				if (XmlRpcServiceInfo.GetXmlRpcType(value.GetType())
 					== XmlRpcType.tInvalid)
 				{
-					throw new ArgumentException(string.Format(
-					  "Type {0} cannot be mapped to an XML-RPC type", value.GetType()));
+					throw new ArgumentException($"Type {value.GetType()} cannot be mapped to an XML-RPC type");
 				}
 				base[key] = value;
 				_keys.Add(key);
@@ -71,13 +71,17 @@ namespace CookComputing.XmlRpc
 			}
 		}
 
-		public override bool Equals(Object obj)
+		public override bool Equals(object obj)
 		{
+			if (obj == null)
+				return false;
+
 			if (obj.GetType() != typeof(XmlRpcStruct))
 				return false;
 			var xmlRpcStruct = (XmlRpcStruct)obj;
 			if (Keys.Count != xmlRpcStruct.Count)
 				return false;
+
 			foreach (string key in Keys)
 			{
 				if (!xmlRpcStruct.ContainsKey(key))
