@@ -39,8 +39,8 @@ namespace CookComputing.XmlRpc
 {
 	internal struct Fault
 	{
-		public int FaultCode;
-		public string FaultString;
+		public int faultCode;
+		public string faultString;
 	}
 
 	public class XmlRpcSerializer
@@ -1488,8 +1488,8 @@ namespace CookComputing.XmlRpc
 				{
 					faultStrCode = (FaultStructStringCode)ParseValue(structNode,
 																	  typeof(FaultStructStringCode), parseStack, mappingAction);
-					fault.FaultCode = Convert.ToInt32(faultStrCode.FaultCode);
-					fault.FaultString = faultStrCode.FaultString;
+					fault.faultCode = Convert.ToInt32(faultStrCode.FaultCode);
+					fault.faultString = faultStrCode.FaultString;
 				}
 				catch (Exception)
 				{
@@ -1498,7 +1498,7 @@ namespace CookComputing.XmlRpc
 				}
 			}
 
-			return new XmlRpcFaultException(fault.FaultCode, fault.FaultString);
+			return new XmlRpcFaultException(fault.faultCode, fault.faultString);
 		}
 
 		public void SerializeFaultResponse(
