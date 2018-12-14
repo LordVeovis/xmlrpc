@@ -34,7 +34,9 @@ test:
     - build
   script:
     - cd "${project_name}.Tests"
-    - dotnet test "${project_name}.Tests.csproj"
+    - dotnet add package coverlet.msbuild
+    - dotnet test /p:CollectCoverage=true "${project_name}.Tests.csproj"
+  coverage: '/Total Line: \d+%/'
   
 publish-nuget:
   stage: deploy
