@@ -35,7 +35,7 @@ namespace CookComputing.XmlRpc
 	public class XmlRpcProxyGen
 	{
 		static readonly IDictionary<Type, Type> s_types = new Dictionary<Type, Type>();
-
+		static readonly object _lock = new object();
 #if (!FX1_0)
 		public static T Create<T>()
 		{
@@ -47,7 +47,7 @@ namespace CookComputing.XmlRpc
 		{
 			// create transient assembly
 			Type proxyType;
-			lock (typeof(XmlRpcProxyGen))
+			lock (_lock)
 			{
 				if (!s_types.TryGetValue(itf, out proxyType))
 				{

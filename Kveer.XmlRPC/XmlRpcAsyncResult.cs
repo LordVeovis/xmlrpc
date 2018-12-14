@@ -37,6 +37,7 @@ namespace CookComputing.XmlRpc
 		private          bool                 _isCompleted;
 		private          ManualResetEvent     _manualResetEvent;
 		private readonly AsyncCallback        _userCallback;
+		private readonly object _lock = new object();
 
 		//internal members
 		internal XmlRpcAsyncResult(
@@ -113,7 +114,7 @@ namespace CookComputing.XmlRpc
 			get {
 				var completed = _isCompleted;
 				if (_manualResetEvent == null)
-					lock (this)
+					lock (_lock)
 					{
 						if (_manualResetEvent == null)
 							_manualResetEvent = new ManualResetEvent(completed);
