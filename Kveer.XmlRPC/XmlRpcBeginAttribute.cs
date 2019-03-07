@@ -51,8 +51,8 @@ namespace CookComputing.XmlRpc
 			return value;
 		}
 
-		public string Description = "";
-		public bool Hidden = false;
-	}
+        public string Description { get; set; } = "";
+        public bool Hidden { get; set; } = false;
+    }
 }
 

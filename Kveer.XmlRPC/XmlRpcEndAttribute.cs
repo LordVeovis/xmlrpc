@@ -30,10 +30,11 @@ namespace CookComputing.XmlRpc
 	[AttributeUsage(AttributeTargets.Method)]
 	public class XmlRpcEndAttribute : Attribute
 	{
-		public string Description = "";
-		public bool   Hidden      = false;
+        public string Description { get; set; } = "";
 
-		public XmlRpcEndAttribute() { }
+        public bool Hidden { get; set; } = false;
+
+        public XmlRpcEndAttribute() { }
 
 		public XmlRpcEndAttribute(string method)
 		{
