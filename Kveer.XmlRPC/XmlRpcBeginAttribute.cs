@@ -39,6 +39,10 @@ namespace CookComputing.XmlRpc
 			Method = method;
 		}
 
+        public string Description { get; set; } = "";
+
+        public bool Hidden { get; set; } = false;
+
 		public string Method { get; } = "";
 
 		public Type ReturnType { get; set; } = null;
@@ -51,8 +55,6 @@ namespace CookComputing.XmlRpc
 			return value;
 		}
 
-		public string Description = "";
-		public bool Hidden = false;
-	}
+    }
 }
 
