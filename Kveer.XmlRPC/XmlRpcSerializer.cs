@@ -72,7 +72,9 @@ namespace CookComputing.XmlRpc
 
 		private bool MapZerosDateTimeToMinValue => (NonStandard & XmlRpcNonStandard.MapZerosDateTimeToMinValue) != 0;
 
-		public void SerializeRequest(Stream stm, XmlRpcRequest request)
+        private bool AllowNull => (NonStandard & XmlRpcNonStandard.AllowNull) != 0;
+
+        public void SerializeRequest(Stream stm, XmlRpcRequest request)
 		{
 			var xtw = new XmlTextWriter(stm, XmlEncoding);
 			ConfigureXmlFormat(xtw);
@@ -137,11 +139,24 @@ namespace CookComputing.XmlRpc
 					}
 				}
 
-				if (request.args[i] == null)
-					throw new XmlRpcNullParameterException(string.Format(
-															   "Null method parameter #{0}", i + 1));
-				xtw.WriteStartElement("", "param", "");
-				Serialize(xtw, request.args[i], mappingAction);
+                xtw.WriteStartElement("", "param", "");
+                if (request.args[i] == null)
+                {
+                    if (!AllowNull)
+                    {
+                        throw new XmlRpcNullParameterException(string.Format(
+                                                               "Null method parameter #{0}", i + 1));
+                    }
+
+                    xtw.WriteStartElement("", "value", "");
+                    xtw.WriteStartElement("", "nil", "");
+                    xtw.WriteEndElement();
+                    xtw.WriteEndElement();
+                }
+                else
+                {   
+                    Serialize(xtw, request.args[i], mappingAction);
+                }
 				xtw.WriteEndElement();
 			}
 		}
