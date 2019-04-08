@@ -64,8 +64,14 @@ namespace Kveer.XmlRPC.Tests
 			return args;
 		}
 
+        [XmlRpcMethod]
+        public int OptioanlNullParameter(string optional = null)
+        {
+            return 1;
+        }
 
-		private readonly string massimoRequest =
+
+        private readonly string massimoRequest =
 			@"<?xml version=""1.0""?>
 <methodCall>
   <methodName>Send_Param</methodName>
@@ -579,7 +585,49 @@ namespace Kveer.XmlRPC.Tests
 					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
-		[Test]
+        [Test]
+        public void SerializeNullParameterUnallowed()
+        {
+            Assert.Throws<XmlRpcNullParameterException>(
+                    () => SerializeNullParameter(XmlRpcNonStandard.None));
+        }
+
+        [Test]
+        public void SerializeNullParameter()
+        {
+            string reqstr = SerializeNullParameter(XmlRpcNonStandard.AllowNull);
+            Assert.AreEqual(
+                @"<?xml version=""1.0""?>
+<methodCall>
+  <methodName>SerializeOptionalNullParameter</methodName>
+  <params>
+    <param>
+      <value>
+        <nil />
+      </value>
+    </param>
+  </params>
+</methodCall>"
+                    .Replace("\r\n", Environment.NewLine), reqstr);
+        }
+
+        private string SerializeNullParameter(XmlRpcNonStandard options)
+        {
+            Stream stm = new MemoryStream();
+            var req = new XmlRpcRequest();
+            req.args = new object[] { null };
+            req.method = "SerializeOptionalNullParameter";
+            req.mi = typeof(IFoo).GetMethod("SerializeOptionalNullParameter");
+            var ser = new XmlRpcSerializer();
+            ser.NonStandard = options;
+            ser.SerializeRequest(stm, req);
+            stm.Position = 0;
+            TextReader tr = new StreamReader(stm);
+            var reqstr = tr.ReadToEnd();
+            return reqstr;
+        }        
+
+        [Test]
 		public void SerializeZeroParameters()
 		{
 			Stream stm = new MemoryStream();
