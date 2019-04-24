@@ -35,7 +35,7 @@ test:
   script:
     - cd "${project_name}.Tests"
     - dotnet add package coverlet.msbuild
-    - dotnet test /p:CollectCoverage=true "${project_name}.Tests.csproj"
+    - dotnet test /p:CollectCoverage=true /p:Exclude="[NUnit3.*]*" "${project_name}.Tests.csproj"
   coverage: '/Total Line: \d+%/'
   
 publish-nuget:
