@@ -10,4 +10,4 @@ jobs:
       - checkout
       - run: dotnet restore "${project_name}/${project_name}.csproj"
       - run: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
-      - run: dotnet test --no-build "${project_name}".Tests
+      - run: dotnet test "${project_name}".Tests
