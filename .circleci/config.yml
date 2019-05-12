@@ -1,0 +1,13 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: microsoft/dotnet:2.1-sdk-alpine
+    environment:
+      project_name: Kveer.XmlRPC
+      configuration: Release
+    steps:
+      - checkout
+      - run: dotnet restore "${project_name}/${project_name}.csproj"
+      - run: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
+      - run: dotnet test "${project_name}".Tests
