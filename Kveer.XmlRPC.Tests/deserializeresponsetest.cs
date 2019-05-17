@@ -17,25 +17,25 @@ namespace Kveer.XmlRPC.Tests
 
 		public struct MyStruct
 		{
-			public string         version;
+			public string version;
 			public InternalStruct record;
 		}
 
 		private struct BillStruct
 		{
-			public int    x;
+			public int x;
 			public string s;
 		}
 
 
 		public struct XmlRpcClassifyRequest
 		{
-			public int      q_id;
-			public string   docid;
-			public string   query;
+			public int q_id;
+			public string docid;
+			public string query;
 			public string[] cattypes;
-			public int      topscores;
-			public int      timeout;
+			public int topscores;
+			public int timeout;
 		}
 
 		public struct user_info
@@ -49,20 +49,20 @@ namespace Kveer.XmlRPC.Tests
 		public struct XmlRpcClassifyResult
 		{
 			public XmlRpcCatData[] categories;
-			public string          error_msg;
-			public int             error_code;
-			public double          exec_time;
-			public int             q_id;
-			public string          cattype;
+			public string error_msg;
+			public int error_code;
+			public double exec_time;
+			public int q_id;
+			public string cattype;
 		}
 
 		public struct XmlRpcCatData
 		{
-			public int      rank;
-			public int      cat_id;
-			public string   cat_title;
-			public double   composite_score;
-			public string   meta_info;
+			public int rank;
+			public int cat_id;
+			public string cat_title;
+			public double composite_score;
+			public string meta_info;
 			public double[] component_scores;
 		}
 
@@ -79,7 +79,7 @@ namespace Kveer.XmlRPC.Tests
 		public struct Category
 		{
 			public string Title;
-			public int    id;
+			public int id;
 		}
 
 		[Test]
@@ -102,7 +102,7 @@ namespace Kveer.XmlRPC.Tests
 </param>
 </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			try
 			{
@@ -128,8 +128,8 @@ namespace Kveer.XmlRPC.Tests
     </param>
   </params>
 </methodResponse>";
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
@@ -140,7 +140,7 @@ namespace Kveer.XmlRPC.Tests
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is int, "retval is int");
-			Assert.AreEqual((int) o, 12345, "retval is 12345");
+			Assert.AreEqual((int)o, 12345, "retval is 12345");
 		}
 
 		[Test]
@@ -158,8 +158,8 @@ namespace Kveer.XmlRPC.Tests
   </params>
 </methodResponse>";
 
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
@@ -171,7 +171,7 @@ namespace Kveer.XmlRPC.Tests
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is int, "retval is int");
-			Assert.AreEqual((int) o, 12345, "retval is 12345");
+			Assert.AreEqual((int)o, 12345, "retval is 12345");
 		}
 
 
@@ -202,21 +202,21 @@ namespace Kveer.XmlRPC.Tests
   </params>
 </methodResponse>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
+			var response = serializer.DeserializeResponse(sr, null);
 
 			var o = response.retVal;
 			Assert.IsTrue(o is XmlRpcStruct, "retval is XmlRpcStruct");
-			var xrs = (XmlRpcStruct) o;
+			var xrs = (XmlRpcStruct)o;
 			Assert.IsTrue(xrs.Count == 1, "retval contains one entry");
 			var elem = xrs["key3"];
 			Assert.IsTrue(elem != null, "element has correct key");
 			Assert.IsTrue(elem is Array, "element is an array");
-			var array = (object[]) elem;
+			var array = (object[])elem;
 			Assert.IsTrue(array.Length == 2, "array has 2 members");
-			Assert.IsTrue(array[0] is string && (string) array[0] == "New Milk"
-											 && array[1] is string && (string) array[1] == "Old Milk",
+			Assert.IsTrue(array[0] is string && (string)array[0] == "New Milk"
+											 && array[1] is string && (string)array[1] == "Old Milk",
 						  "values of array members");
 		}
 
@@ -252,14 +252,14 @@ namespace Kveer.XmlRPC.Tests
     </param> 
   </params> 
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response
 				= serializer.DeserializeResponse(sr, typeof(BillStruct));
 
 			var o = response.retVal;
 			Assert.IsTrue(o is BillStruct, "retval is BillStruct");
-			var bs = (BillStruct) o;
+			var bs = (BillStruct)o;
 			Assert.IsTrue(bs.x == 123 && bs.s == "ABD~~DEF", "struct members");
 		}
 
@@ -282,7 +282,7 @@ namespace Kveer.XmlRPC.Tests
 </param>
 </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			Assert.That(() => serializer.DeserializeResponse(sr1,
@@ -309,7 +309,7 @@ namespace Kveer.XmlRPC.Tests
 </param>
 </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			Assert.That(() => serializer.DeserializeResponse(sr1,
@@ -341,12 +341,12 @@ This should be ignored.
 </param>
 </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			var response = serializer.DeserializeResponse(sr1,
 														  typeof(Donhrobjartz));
-			var ret = (Donhrobjartz) response.retVal;
+			var ret = (Donhrobjartz)response.retVal;
 			Assert.AreEqual(ret.period, "1w");
 		}
 
@@ -369,7 +369,7 @@ This should be ignored.
 </param>
 </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			Assert.That(() => serializer.DeserializeResponse(sr1,
@@ -396,7 +396,7 @@ This should be ignored.
 </param>
 </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			Assert.That(() => serializer.DeserializeResponse(sr1,
@@ -429,12 +429,12 @@ This should be ignored.
 </param>
 </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			var response = serializer.DeserializeResponse(sr1,
 														  typeof(XmlRpcStruct));
-			var ret = (XmlRpcStruct) response.retVal;
+			var ret = (XmlRpcStruct)response.retVal;
 			Assert.AreEqual(ret.Count, 1);
 		}
 
@@ -446,7 +446,7 @@ This should be ignored.
   <params/>
 </methodResponse>
 ";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response = serializer.DeserializeResponse(sr1,
 														  typeof(void));
@@ -464,10 +464,10 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(string));
-			var s          = (string) response.retVal;
+			var response = serializer.DeserializeResponse(sr, typeof(string));
+			var s = (string)response.retVal;
 			Assert.IsTrue(s == "", "retval is empty string");
 		}
 
@@ -491,7 +491,7 @@ This should be ignored.
     </value>
   </fault>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			try
 			{
@@ -526,7 +526,7 @@ This should be ignored.
     </value>
   </fault>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			try
 			{
@@ -550,14 +550,14 @@ This should be ignored.
 				"</double></value></member><member><name>scalebar</name><value><int>1</int></value></member><member><name>content</name><value><string>http://mapserv.where2getit.net/maptools/mapserv.cgi/a5955239d080dfbb7002fd063aa7b47e0d.png</string></value></member><member><name>scale</name><value><int>26000</int></value></member><member><name>map_style</name><value><string>default</string></value></member><member><name>size</name><value><array><data><value><int>600</int></value><value><int>400</int></value></data></array></value></member><member><name>content_type</name><value><string>text/uri-list</string></value></member><member><name>buffer</name><value><double>0.01</double></value></member><member><name>center</name><value><struct><member><name>georesult</name><value><string>AUTOBBOX</string></value></member><member><name>latitude</name><value><double>39.74147878</double></value></member><member><name>longitude</name><value><double>-104.9874159</double></value></member></struct></value></member></struct></value></member><member><name>result_count</name><value><int>1</int></value></member><member><name>image_map</name><value><boolean>1</boolean></value></member><member><name>result_total_count</name><value><int>1</int></value></member></struct></value></member><member><name>times</name><value><struct><member><name>csys</name><value><int>0</int></value></member><member><name>cusr</name><value><int>0</int></value></member><member><name>sys</name><value><int>0</int></value></member><member><name>usr</name><value><double>0.0200000000000005"
 				+
 				"</double></value></member><member><name>wallclock</name><value><double>2.547471</double></value></member></struct></value></member><member><name>request</name><value><struct><member><name>state</name><value><string>CO</string></value></member><member><name>%sort</name><value><array><data /></array></value></member><member><name>%id</name><value><string>4669b341d87be7f450b4bf0dc4cd0a1e</string></value></member><member><name>city</name><value><string>denver</string></value></member><member><name>%limit</name><value><int>10</int></value></member><member><name>%offset</name><value><int>0</int></value></member></struct></value></member></struct></value></param></params></methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response = serializer.DeserializeResponse(sr,
 														  typeof(XmlRpcStruct));
 
-			var response_struct = (XmlRpcStruct) response.retVal;
-			var _response       = (XmlRpcStruct) response_struct["response"];
-			var results         = (Array) _response["result"];
+			var response_struct = (XmlRpcStruct)response.retVal;
+			var _response = (XmlRpcStruct)response_struct["response"];
+			var results = (Array)_response["result"];
 			Assert.AreEqual(results.Length, 1);
 		}
 
@@ -573,14 +573,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
+			var response = serializer.DeserializeResponse(sr, null);
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is int, "retval is int");
-			Assert.AreEqual((int) o, 12345, "retval is 12345");
+			Assert.AreEqual((int)o, 12345, "retval is 12345");
 		}
 
 		[Test]
@@ -594,14 +594,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(int));
+			var response = serializer.DeserializeResponse(sr, typeof(int));
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is int, "retval is int");
-			Assert.AreEqual((int) o, 12345, "retval is 12345");
+			Assert.AreEqual((int)o, 12345, "retval is 12345");
 		}
 
 		[Test]
@@ -617,9 +617,9 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-				var sr         = new StringReader(xml);
+				var sr = new StringReader(xml);
 				var serializer = new XmlRpcSerializer();
-				var response   = serializer.DeserializeResponse(sr, typeof(string));
+				var response = serializer.DeserializeResponse(sr, typeof(string));
 				Assert.Fail("Should throw XmlRpcTypeMismatchException");
 			}
 			catch (XmlRpcTypeMismatchException) { }
@@ -636,14 +636,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
+			var response = serializer.DeserializeResponse(sr, null);
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is int, "retval is int");
-			Assert.AreEqual((int) o, 12345, "retval is 12345");
+			Assert.AreEqual((int)o, 12345, "retval is 12345");
 		}
 
 		[Test]
@@ -657,14 +657,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(int));
+			var response = serializer.DeserializeResponse(sr, typeof(int));
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is int, "retval is int");
-			Assert.AreEqual((int) o, 12345, "retval is 12345");
+			Assert.AreEqual((int)o, 12345, "retval is 12345");
 		}
 
 		[Test]
@@ -682,8 +682,8 @@ This should be ignored.
   </params>
 </methodResponse>";
 
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
@@ -695,9 +695,9 @@ This should be ignored.
 		[Test]
 		public void InvalidXML()
 		{
-			var    xml  = @"response>";
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			var xml = @"response>";
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
@@ -709,9 +709,9 @@ This should be ignored.
 		[Test]
 		public void InvalidXMLWithAllowInvalidHTTPContent()
 		{
-			var    xml  = @"response>";
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			var xml = @"response>";
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
@@ -731,7 +731,7 @@ This should be ignored.
 				var serializer = new XmlRpcSerializer();
 				var response
 					= serializer.DeserializeResponse(stm, typeof(string));
-				var ret = (string) response.retVal;
+				var ret = (string)response.retVal;
 				var nnn = ret.Length;
 				Assert.IsTrue(ret == "hæ hvað segirðu þá",
 							  "retVal is 'hæ hvað segirðu þá'");
@@ -750,14 +750,14 @@ This should be ignored.
 </params> 
 
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response
 				= serializer.DeserializeResponse(sr, typeof(int));
 
 			var o = response.retVal;
 			Assert.IsTrue(o is int, "retval is int");
-			var myint = (int) o;
+			var myint = (int)o;
 			Assert.AreEqual(myint, 12, "int is 12");
 		}
 
@@ -775,13 +775,13 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
 			var response = serializer.DeserializeResponse(sr, typeof(DateTime));
-			var o        = response.retVal;
+			var o = response.retVal;
 			Assert.IsTrue(o is DateTime, "retval is string");
-			Assert.AreEqual((DateTime) o, DateTime.MinValue, "DateTime.MinValue");
+			Assert.AreEqual((DateTime)o, DateTime.MinValue, "DateTime.MinValue");
 		}
 
 		[Test]
@@ -795,14 +795,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
 			var response = serializer.DeserializeResponse(sr, typeof(DateTime));
 
 			var o = response.retVal;
 			Assert.IsTrue(o is DateTime, "retval is string");
-			Assert.AreEqual((DateTime) o, DateTime.MinValue, "DateTime.MinValue");
+			Assert.AreEqual((DateTime)o, DateTime.MinValue, "DateTime.MinValue");
 		}
 
 		[Test]
@@ -816,14 +816,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
 			var response = serializer.DeserializeResponse(sr, typeof(DateTime));
 
 			var o = response.retVal;
 			Assert.IsTrue(o is DateTime, "retval is string");
-			Assert.AreEqual((DateTime) o, DateTime.MinValue, "DateTime.MinValue");
+			Assert.AreEqual((DateTime)o, DateTime.MinValue, "DateTime.MinValue");
 		}
 
 		[Test]
@@ -837,14 +837,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.MapZerosDateTimeToMinValue;
 			var response = serializer.DeserializeResponse(sr, typeof(DateTime));
 
 			var o = response.retVal;
 			Assert.IsTrue(o is DateTime, "retval is string");
-			Assert.AreEqual((DateTime) o, DateTime.MinValue, "DateTime.MinValue");
+			Assert.AreEqual((DateTime)o, DateTime.MinValue, "DateTime.MinValue");
 		}
 
 		[Test]
@@ -858,7 +858,7 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
 			try
@@ -890,7 +890,7 @@ This should be ignored.
     </param> 
   </params> 
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			try
 			{
@@ -908,9 +908,9 @@ This should be ignored.
 		[Test]
 		public void OneByteContentAllowInvalidHTTPContent()
 		{
-			var    xml  = @"<";
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			var xml = @"<";
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
@@ -953,14 +953,14 @@ This should be ignored.
   </params>
 </methodResponse>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response
 				= serializer.DeserializeResponse(sr, typeof(MyStruct));
 
 			var o = response.retVal;
 			Assert.IsTrue(o is MyStruct, "retval is MyStruct");
-			var mystr = (MyStruct) o;
+			var mystr = (MyStruct)o;
 			Assert.AreEqual(mystr.version, "1.6", "version is 1.6");
 			Assert.IsTrue(mystr.record.firstName == "Joe", "firstname is Joe");
 			Assert.IsTrue(mystr.record.lastName == "Test", "lastname is Test");
@@ -996,13 +996,13 @@ This should be ignored.
   </params>
 </methodResponse>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response
 				= serializer.DeserializeResponse(sr, typeof(object));
 
-			var o   = response.retVal;
-			var ret = (string) ((XmlRpcStruct) o)["key3"];
+			var o = response.retVal;
+			var ret = (string)((XmlRpcStruct)o)["key3"];
 		}
 
 
@@ -1027,13 +1027,13 @@ This should be ignored.
   </params>
 </methodResponse>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			var response
 				= serializer.DeserializeResponse(sr, typeof(XmlRpcStruct));
 
-			var o   = response.retVal;
-			var ret = (string) ((XmlRpcStruct) o)["key3"];
+			var o = response.retVal;
+			var ret = (string)((XmlRpcStruct)o)["key3"];
 		}
 
 		[Test]
@@ -1049,9 +1049,9 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-				var sr         = new StringReader(xml);
+				var sr = new StringReader(xml);
 				var serializer = new XmlRpcSerializer();
-				var response   = serializer.DeserializeResponse(sr, typeof(int));
+				var response = serializer.DeserializeResponse(sr, typeof(int));
 				Assert.Fail("Should throw XmlRpcTypeMismatchException");
 			}
 			catch (XmlRpcTypeMismatchException) { }
@@ -1068,14 +1068,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(string));
+			var response = serializer.DeserializeResponse(sr, typeof(string));
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is string, "retval is string");
-			Assert.AreEqual((string) o, "test string", "retval is 'test string'");
+			Assert.AreEqual((string)o, "test string", "retval is 'test string'");
 		}
 
 		[Test]
@@ -1089,14 +1089,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
+			var response = serializer.DeserializeResponse(sr, null);
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is string, "retval is string");
-			Assert.AreEqual((string) o, "test string", "retval is 'test string'");
+			Assert.AreEqual((string)o, "test string", "retval is 'test string'");
 		}
 
 		[Test]
@@ -1110,14 +1110,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(string));
+			var response = serializer.DeserializeResponse(sr, typeof(string));
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is string, "retval is string");
-			Assert.AreEqual((string) o, "test string", "retval is 'test string'");
+			Assert.AreEqual((string)o, "test string", "retval is 'test string'");
 		}
 
 
@@ -1150,10 +1150,10 @@ This should be ignored.
   </params>
 </methodResponse>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
-			var o          = response.retVal;
+			var response = serializer.DeserializeResponse(sr, null);
+			var o = response.retVal;
 		}
 
 		[Test]
@@ -1167,14 +1167,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(string));
+			var response = serializer.DeserializeResponse(sr, typeof(string));
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is string, "retval is string");
-			Assert.AreEqual((string) o, "", "retval is empty string");
+			Assert.AreEqual((string)o, "", "retval is empty string");
 		}
 
 		// test return double
@@ -1193,14 +1193,14 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
+			var response = serializer.DeserializeResponse(sr, null);
 
 			var o = response.retVal;
 			Assert.IsTrue(o != null, "retval not null");
 			Assert.IsTrue(o is string, "retval is string");
-			Assert.AreEqual((string) o, "test string", "retval is 'test string'");
+			Assert.AreEqual((string)o, "test string", "retval is 'test string'");
 		}
 
 		[Test]
@@ -1258,7 +1258,7 @@ This should be ignored.
  </param>
  </params>
  </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
 			Assert.That(() => serializer.DeserializeResponse(sr1,
@@ -1292,7 +1292,7 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			try
 			{
@@ -1302,9 +1302,9 @@ This should be ignored.
 			catch (XmlRpcInvalidXmlRpcException) { }
 
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var sr2       = new StringReader(xml);
+			var sr2 = new StringReader(xml);
 			var response2 = serializer.DeserializeResponse(sr2, typeof(DupMem));
-			var dupMem    = (DupMem) response2.retVal;
+			var dupMem = (DupMem)response2.retVal;
 			Assert.AreEqual(dupMem.foo, "this is a test");
 		}
 
@@ -1319,9 +1319,9 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, typeof(void));
+			var response = serializer.DeserializeResponse(sr, typeof(void));
 			Assert.IsTrue(response.retVal == null, "retval is null");
 		}
 
@@ -1351,7 +1351,7 @@ This should be ignored.
     </param>
   </params>
 </methodResponse>";
-			var sr1        = new StringReader(xml);
+			var sr1 = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			try
 			{
@@ -1361,10 +1361,10 @@ This should be ignored.
 			catch (XmlRpcInvalidXmlRpcException) { }
 
 			serializer.NonStandard = XmlRpcNonStandard.IgnoreDuplicateMembers;
-			var sr2       = new StringReader(xml);
+			var sr2 = new StringReader(xml);
 			var response2 = serializer.DeserializeResponse(sr2, typeof(XmlRpcStruct));
-			var dupMem    = (XmlRpcStruct) response2.retVal;
-			Assert.IsTrue((string) dupMem["foo"] == "this is a test");
+			var dupMem = (XmlRpcStruct)response2.retVal;
+			Assert.IsTrue((string)dupMem["foo"] == "this is a test");
 		}
 
 		[Test]
@@ -1372,9 +1372,9 @@ This should be ignored.
 		{
 			var xml =
 				@"<?xml version=""1.0"" encoding=""ISO-8859-1""?><methodResponse><params><param><value><array><data><value>addressbook</value><value>system</value></data></array></value></param></params></methodResponse>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var response   = serializer.DeserializeResponse(sr, null);
+			var response = serializer.DeserializeResponse(sr, null);
 
 			var o = response.retVal;
 		}
@@ -1382,9 +1382,9 @@ This should be ignored.
 		[Test]
 		public void ZeroByteContentAllowInvalidHTTPContent()
 		{
-			var    xml  = @"";
-			Stream stm  = new MemoryStream();
-			var    wrtr = new StreamWriter(stm, Encoding.ASCII);
+			var xml = @"";
+			Stream stm = new MemoryStream();
+			var wrtr = new StreamWriter(stm, Encoding.ASCII);
 			wrtr.Write(xml);
 			wrtr.Flush();
 			stm.Position = 0;
