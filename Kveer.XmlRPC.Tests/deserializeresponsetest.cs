@@ -1393,5 +1393,25 @@ This should be ignored.
 			Assert.That(() => serializer.DeserializeResponse(stm, typeof(int)),
 						Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
+
+		[Test]
+		public void NilType()
+		{
+			var xml = @"<?xml version=""1.0"" ?> 
+<methodResponse>
+  <params>
+    <param>
+      <value><nil/></value>
+    </param>
+  </params>
+</methodResponse>";
+			var sr = new StringReader(xml);
+			var serializer = new XmlRpcSerializer();
+			var response = serializer.DeserializeResponse(sr, null);
+
+			var o = response.retVal;
+			Assert.AreEqual(null, o, "retval is null");
+		}
+
 	}
 }

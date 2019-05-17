@@ -1266,5 +1266,26 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<
 							XmlRpcInvalidXmlRpcException>());
 		}
+
+		[Test]
+		public void Nil()
+		{
+			var xml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName>TestInt</methodName>
+  <params>
+    <param>
+      <value>
+        <nil/>
+      </value>
+    </param>
+  </params>
+</methodCall>";
+			var sr = new StringReader(xml);
+			var serializer = new XmlRpcSerializer();
+			var request = serializer.DeserializeRequest(sr, null);
+			Assert.AreEqual(request.args[0], null,
+							"argument is null");
+		}
 	}
 }
