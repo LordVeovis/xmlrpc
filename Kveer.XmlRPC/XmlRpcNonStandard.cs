@@ -37,6 +37,7 @@ namespace CookComputing.XmlRpc
 		MapZerosDateTimeToMinValue = 0x8,
 		MapEmptyDateTimeToMinValue = 0x10,
 		AllowInvalidHttpContent    = 0x20,
-		All                        = 0x7fff
+        AllowNull                  = 0x40,
+        All                        = 0x7fff
 	}
 }
