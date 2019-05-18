@@ -647,8 +647,14 @@ namespace CookComputing.XmlRpc
 					parsedType = typeof(DateTime);
 					parsedArrayType = typeof(DateTime[]);
 				}
+                else if (node.Name == "nil")
+                {
+                    retObj = null;
+                    parsedType = null;
+                    parsedArrayType = null;
+                }
 				else
-				{
+                {
 					throw new XmlRpcInvalidXmlRpcException(
 						"Invalid value element: <" + node.Name + ">");
 				}
