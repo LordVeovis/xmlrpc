@@ -27,7 +27,7 @@ namespace Kveer.XmlRPC.Tests
 			}
 
 			private int _member2;
-			public  int member2 => _member2;
+			public int member2 => _member2;
 
 			private int _member3;
 
@@ -159,7 +159,7 @@ namespace Kveer.XmlRPC.Tests
 
 		public class TestClass
 		{
-			public int    _int;
+			public int _int;
 			public string _string;
 		}
 
@@ -169,7 +169,7 @@ namespace Kveer.XmlRPC.Tests
 
 		public struct simple
 		{
-			public int    number;
+			public int number;
 			public string detail;
 		}
 
@@ -202,13 +202,13 @@ namespace Kveer.XmlRPC.Tests
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(byte[]),
 							"argument is byte[]");
-			var ret = (byte[]) request.args[0];
+			var ret = (byte[])request.args[0];
 			Assert.AreEqual(8, ret.Length, "argument is byte[8]");
 			for (var i = 0; i < ret.Length; i++)
 				Assert.AreEqual(i + 1, ret[i], "members are 1 to 8");
@@ -238,9 +238,9 @@ namespace Kveer.XmlRPC.Tests
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(byte[]),
 							"argument is byte[]");
@@ -263,13 +263,13 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(byte[]),
 							"argument is byte[]");
-			var ret = (byte[]) request.args[0];
+			var ret = (byte[])request.args[0];
 			Assert.AreEqual(17, ret.Length, "argument is byte[17]");
 			for (var i = 0; i < 9; i++)
 				Assert.AreEqual(i + 1, ret[i], "first 9 members are 1 to 9");
@@ -296,9 +296,9 @@ AQIDBAUGBwg=</base64>
 </array></value></param>
 </params></methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(simple[]),
 							"argument is simple[]");
@@ -334,22 +334,22 @@ AQIDBAUGBwg=</base64>
   </params>
 </methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(TestClass),
 							"argument is TestClass");
-//      XmlRpcStruct xrs = (XmlRpcStruct)request.args[0];
-//      Assert.IsTrue(xrs.Count == 4, "XmlRpcStruct has 4 members");
-//      Assert.IsTrue(xrs.ContainsKey("member1") && (int)xrs["member1"] == 1, 
-//        "member1");
-//      Assert.IsTrue(xrs.ContainsKey("member2") && (int)xrs["member2"] == 2, 
-//        "member2");
-//      Assert.IsTrue(xrs.ContainsKey("member-3") && (int)xrs["member-3"] == 3,
-//        "member-3");
-//      Assert.IsTrue(xrs.ContainsKey("member-4") && (int)xrs["member-4"] == 4,
-//        "member-4");
+			//      XmlRpcStruct xrs = (XmlRpcStruct)request.args[0];
+			//      Assert.IsTrue(xrs.Count == 4, "XmlRpcStruct has 4 members");
+			//      Assert.IsTrue(xrs.ContainsKey("member1") && (int)xrs["member1"] == 1, 
+			//        "member1");
+			//      Assert.IsTrue(xrs.ContainsKey("member2") && (int)xrs["member2"] == 2, 
+			//        "member2");
+			//      Assert.IsTrue(xrs.ContainsKey("member-3") && (int)xrs["member-3"] == 3,
+			//        "member-3");
+			//      Assert.IsTrue(xrs.ContainsKey("member-4") && (int)xrs["member-4"] == 4,
+			//        "member-4");
 		}
 
 		// test handling dateTime values
@@ -377,16 +377,16 @@ AQIDBAUGBwg=</base64>
 </params>
 </methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			serializer.NonStandard = XmlRpcNonStandard.AllowNonStandardDateTime;
 			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.IsTrue(request.args[0] is DateTime, "argument is DateTime");
-			var dt0 = (DateTime) request.args[0];
-			var dt1 = (DateTime) request.args[1];
-			var dt2 = (DateTime) request.args[2];
-			var dt3 = (DateTime) request.args[3];
+			var dt0 = (DateTime)request.args[0];
+			var dt1 = (DateTime)request.args[1];
+			var dt2 = (DateTime)request.args[2];
+			var dt3 = (DateTime)request.args[3];
 
 			var dt = new DateTime(2002, 7, 7, 11, 25, 37);
 			Assert.AreEqual(dt0, dt, "DateTime WordPress");
@@ -415,19 +415,19 @@ AQIDBAUGBwg=</base64>
 						while (dt < DateTime.Now)
 						{
 							Stream stm = new MemoryStream();
-							var    req = new XmlRpcRequest();
-							req.args   = new object[] {dt};
+							var req = new XmlRpcRequest();
+							req.args = new object[] { dt };
 							req.method = "Foo";
 							var ser = new XmlRpcSerializer();
 							ser.SerializeRequest(stm, req);
 							stm.Position = 0;
 
 							var serializer = new XmlRpcSerializer();
-							var request    = serializer.DeserializeRequest(stm, null);
+							var request = serializer.DeserializeRequest(stm, null);
 
 							Assert.IsTrue(request.args[0] is DateTime,
 										  "argument is DateTime");
-							var dt0 = (DateTime) request.args[0];
+							var dt0 = (DateTime)request.args[0];
 							Assert.AreEqual(dt0, dt, "DateTime argument 0");
 							dt += new TimeSpan(100, 1, 1, 1);
 						}
@@ -455,7 +455,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -472,7 +472,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -487,9 +487,9 @@ AQIDBAUGBwg=</base64>
 </value></param>
 </params></methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
@@ -508,7 +508,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -523,7 +523,7 @@ AQIDBAUGBwg=</base64>
   <param/>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -539,7 +539,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -547,7 +547,7 @@ AQIDBAUGBwg=</base64>
 		[Test]
 		public void EmptyRequestStream()
 		{
-			var sr         = new StringReader("");
+			var sr = new StringReader("");
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
@@ -557,14 +557,14 @@ AQIDBAUGBwg=</base64>
 		{
 			var xml =
 				@"<?xml version=""1.0"" ?><methodCall><methodName>TestString</methodName><params><param><value>test string</value></param></params></methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.method, "TestString", "method is TestString");
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
-			Assert.AreEqual((string) request.args[0], "test string",
+			Assert.AreEqual((string)request.args[0], "test string",
 							"argument is 'test string'");
 		}
 
@@ -580,14 +580,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.IsTrue(request.method == "TestInt", "method is TestInt");
 			Assert.AreEqual(request.args[0].GetType(), typeof(int),
 							"argument is int");
-			Assert.AreEqual((int) request.args[0], 666, "argument is 666");
+			Assert.AreEqual((int)request.args[0], 666, "argument is 666");
 		}
 
 		// test handling i8 values
@@ -605,12 +605,12 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 			Assert.AreEqual(request.args[0].GetType(), typeof(long),
 							"argument is long");
-			Assert.AreEqual((long) request.args[0], 123456789012, "argument is 123456789012");
+			Assert.AreEqual((long)request.args[0], 123456789012, "argument is 123456789012");
 		}
 
 		[Test]
@@ -625,12 +625,12 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 			Assert.AreEqual(request.args[0].GetType(), typeof(long),
 							"argument is long");
-			Assert.AreEqual((long) request.args[0], 123456789012, "argument is 123456789012");
+			Assert.AreEqual((long)request.args[0], 123456789012, "argument is 123456789012");
 		}
 
 		// test handling integer values
@@ -648,14 +648,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.IsTrue(request.method == "TestInt", "method is TestInt");
 			Assert.AreEqual(request.args[0].GetType(), typeof(int),
 							"argument is int");
-			Assert.AreEqual((int) request.args[0], 666, "argument is 666");
+			Assert.AreEqual((int)request.args[0], 666, "argument is 666");
 		}
 
 		[Test]
@@ -670,14 +670,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.IsTrue(request.method == "TestInt", "method is TestInt");
 			Assert.AreEqual(request.args[0].GetType(), typeof(int),
 							"argument is int");
-			Assert.AreEqual((int) request.args[0], 666, "argument is 666");
+			Assert.AreEqual((int)request.args[0], 666, "argument is 666");
 		}
 
 		[Test]
@@ -692,7 +692,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -709,7 +709,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -719,7 +719,7 @@ AQIDBAUGBwg=</base64>
 		{
 			var xml = @"<?xml version=""1.0"" ?> 
 <methodCall> </duffMmethodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcIllFormedXmlException>());
 		}
@@ -733,10 +733,10 @@ AQIDBAUGBwg=</base64>
 									   FileMode.Open, FileAccess.Read))
 			{
 				var serializer = new XmlRpcSerializer();
-				var request    = serializer.DeserializeRequest(stm, null);
+				var request = serializer.DeserializeRequest(stm, null);
 				Assert.AreEqual(request.args[0].GetType(), typeof(string),
 								"argument is string");
-				Assert.AreEqual((string) request.args[0], "hæ hvað segirðu þá",
+				Assert.AreEqual((string)request.args[0], "hæ hvað segirðu þá",
 								"argument is 'hæ hvað segirðu þá'");
 			}
 		}
@@ -750,9 +750,9 @@ AQIDBAUGBwg=</base64>
 <param><value> ddd</value></param>
 </params></methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
@@ -763,8 +763,8 @@ AQIDBAUGBwg=</base64>
 		[Test]
 		public void MissingMethodCall()
 		{
-			var xml        = @"<?xml version=""1.0"" ?> <elem/>";
-			var sr         = new StringReader(xml);
+			var xml = @"<?xml version=""1.0"" ?> <elem/>";
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -781,7 +781,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -794,9 +794,9 @@ AQIDBAUGBwg=</base64>
 <methodCall>
 <methodName>TestString</methodName> 
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 		}
 
 		[Test]
@@ -811,12 +811,12 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 			Assert.AreEqual(request.args[0].GetType(), typeof(long),
 							"argument is long");
-			Assert.AreEqual((long) request.args[0], -123456789012, "argument is -123456789012");
+			Assert.AreEqual((long)request.args[0], -123456789012, "argument is -123456789012");
 		}
 
 		[Test]
@@ -831,14 +831,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.IsTrue(request.method == "TestInt", "method is TestInt");
 			Assert.AreEqual(request.args[0].GetType(), typeof(int),
 							"argument is int");
-			Assert.AreEqual((int) request.args[0], -666, "argument is -666");
+			Assert.AreEqual((int)request.args[0], -666, "argument is -666");
 		}
 
 		[Test]
@@ -853,7 +853,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 
@@ -871,7 +871,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -885,9 +885,9 @@ AQIDBAUGBwg=</base64>
 <methodName>MethodNoArgs</methodName> 
 <params/>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 		}
 
 		// test handling of param element
@@ -900,17 +900,17 @@ AQIDBAUGBwg=</base64>
   <params>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 			//Console.WriteLine("");
 		}
 
 		[Test]
 		public void NullRequestStream()
 		{
-			var    serializer = new XmlRpcSerializer();
-			Stream stm        = null;
+			var serializer = new XmlRpcSerializer();
+			Stream stm = null;
 			Assert.That(() => serializer.DeserializeRequest(stm, null), Throws.ArgumentNullException);
 
 		}
@@ -927,7 +927,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -944,7 +944,7 @@ AQIDBAUGBwg=</base64>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<XmlRpcInvalidXmlRpcException>());
 		}
@@ -958,9 +958,9 @@ AQIDBAUGBwg=</base64>
 <param><value> </value></param>
 </params></methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
@@ -980,14 +980,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.method, "TestString", "method is TestString");
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
-			Assert.AreEqual((string) request.args[0], "test string",
+			Assert.AreEqual((string)request.args[0], "test string",
 							"argument is 'test string'");
 		}
 
@@ -1003,14 +1003,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.method, "TestString", "method is TestString");
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
-			Assert.AreEqual((string) request.args[0], "", "argument is empty string");
+			Assert.AreEqual((string)request.args[0], "", "argument is empty string");
 		}
 
 		[Test]
@@ -1025,14 +1025,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.method, "TestString", "method is TestString");
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
-			Assert.AreEqual((string) request.args[0], "", "argument is empty string");
+			Assert.AreEqual((string)request.args[0], "", "argument is empty string");
 		}
 
 		[Test]
@@ -1047,14 +1047,14 @@ AQIDBAUGBwg=</base64>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.method, "TestString", "method is TestString");
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
-			Assert.AreEqual((string) request.args[0], "test string",
+			Assert.AreEqual((string)request.args[0], "test string",
 							"argument is 'test string'");
 		}
 
@@ -1098,21 +1098,21 @@ AQIDBAUGBwg=</base64>
   </params>
 </methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(XmlRpcStruct),
 							"argument is XmlRpcStruct");
-			var xrs = (XmlRpcStruct) request.args[0];
+			var xrs = (XmlRpcStruct)request.args[0];
 			Assert.IsTrue(xrs.Count == 4, "XmlRpcStruct has 4 members");
-			Assert.IsTrue(xrs.ContainsKey("member1") && (int) xrs["member1"] == 1,
+			Assert.IsTrue(xrs.ContainsKey("member1") && (int)xrs["member1"] == 1,
 						  "member1");
-			Assert.IsTrue(xrs.ContainsKey("member2") && (int) xrs["member2"] == 2,
+			Assert.IsTrue(xrs.ContainsKey("member2") && (int)xrs["member2"] == 2,
 						  "member2");
-			Assert.IsTrue(xrs.ContainsKey("member-3") && (int) xrs["member-3"] == 3,
+			Assert.IsTrue(xrs.ContainsKey("member-3") && (int)xrs["member-3"] == 3,
 						  "member-3");
-			Assert.IsTrue(xrs.ContainsKey("member-4") && (int) xrs["member-4"] == 4,
+			Assert.IsTrue(xrs.ContainsKey("member-4") && (int)xrs["member-4"] == 4,
 						  "member-4");
 		}
 
@@ -1131,7 +1131,7 @@ AQIDBAUGBwg=</base64>
 </params>
 </methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, GetType()), Throws.TypeOf<
 							XmlRpcInvalidParametersException>());
@@ -1164,7 +1164,7 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 </params>
 </methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, GetType()), Throws.TypeOf<
 							XmlRpcInvalidParametersException>());
@@ -1179,9 +1179,9 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 <param><value>  ddd</value></param>
 </params></methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
@@ -1197,9 +1197,9 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
 <param><value>  </value></param>
 </params></methodCall>";
 
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, GetType());
+			var request = serializer.DeserializeRequest(sr, GetType());
 
 			Assert.AreEqual(request.args[0].GetType(), typeof(string),
 							"argument is string");
@@ -1219,12 +1219,12 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 			Assert.AreEqual(request.args[0].GetType(), typeof(long),
 							"argument is long");
-			Assert.AreEqual((long) request.args[0], 0, "argument is 0");
+			Assert.AreEqual((long)request.args[0], 0, "argument is 0");
 		}
 
 		[Test]
@@ -1239,14 +1239,14 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
     </param>
   </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
-			var request    = serializer.DeserializeRequest(sr, null);
+			var request = serializer.DeserializeRequest(sr, null);
 
 			Assert.IsTrue(request.method == "TestInt", "method is TestInt");
 			Assert.AreEqual(request.args[0].GetType(), typeof(int),
 							"argument is int");
-			Assert.AreEqual((int) request.args[0], 0, "argument is 0");
+			Assert.AreEqual((int)request.args[0], 0, "argument is 0");
 		}
 
 		[Test]
@@ -1261,10 +1261,31 @@ ffffe43c0b763036ffffffa0fffffff3ffffffa963377716</string>
   </param>
 </params>
 </methodCall>";
-			var sr         = new StringReader(xml);
+			var sr = new StringReader(xml);
 			var serializer = new XmlRpcSerializer();
 			Assert.That(() => serializer.DeserializeRequest(sr, null), Throws.TypeOf<
 							XmlRpcInvalidXmlRpcException>());
+		}
+
+		[Test]
+		public void Nil()
+		{
+			var xml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName>TestInt</methodName>
+  <params>
+    <param>
+      <value>
+        <nil/>
+      </value>
+    </param>
+  </params>
+</methodCall>";
+			var sr = new StringReader(xml);
+			var serializer = new XmlRpcSerializer();
+			var request = serializer.DeserializeRequest(sr, null);
+			Assert.AreEqual(request.args[0], null,
+							"argument is null");
 		}
 	}
 }
