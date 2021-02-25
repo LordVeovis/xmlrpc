@@ -13,7 +13,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>- publish the symbols on https://nuget.smbsrc.net
 - fully automate the build</PackageReleaseNotes>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicense>MIT License</PackageLicense>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
