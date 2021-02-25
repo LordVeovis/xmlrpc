@@ -8,6 +8,43 @@ jobs:
       configuration: Release
     steps:
       - checkout
-      - run: dotnet restore "${project_name}/${project_name}.csproj"
-      - run: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
-      - run: dotnet test "${project_name}".Tests
+      - run:
+          name: Install dependencies
+          command: dotnet restore "${project_name}/${project_name}.csproj"
+      - run:
+          name: Compile project
+          command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
+      - run:
+          name: Run unit tests
+          command: dotnet test "${project_name}".Tests
+      - run:
+          name: Build nuget package
+          command: dotnet pack -c "${configuration}" --include-symbols "${project_name}/${project_name}.csproj"
+      - run:
+          name: Copy artifacts
+          command: |
+            mkdir /artifacts
+            cp "${project_name}/bin/${configuration}/${project_name}.*.nupkg" /artifacts
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./artifacts
+        run:
+          name: "Publish Release on Github"
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} -draft ./artifacts/
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - publish-github-release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
