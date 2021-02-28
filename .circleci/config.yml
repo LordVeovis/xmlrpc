@@ -16,14 +16,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - dotnet-packages-v1-{{ checksum "${project_name}/${project_name}.csproj" }}
+            - dotnet-packages-v1-{{ checksum "Kveer.XmlRPC/Kveer.XmlRPC.csproj" }}
       - run:
           name: Install dependencies
           command: dotnet restore "${project_name}/${project_name}.csproj"
       - save_cache:
           paths:
-            c:\Users\circleci\.nuget\packages
-          key: dotnet-packages-v1-{{ checksum "${project_name}/${project_name}.csproj" }}
+            /root/.nuget/packages
+          key: dotnet-packages-v1-{{ checksum "Kveer.XmlRPC/Kveer.XmlRPC.csproj" }}
       - run:
           name: Compile project
           command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
