@@ -1,22 +1,33 @@
 version: 2.1
+
+orbs:
+  windows: circleci/windows@2.4.0
+
 jobs:
   build:
-    docker:
-      - image: microsoft/dotnet:2.1-sdk-alpine
+    executor:
+      name: windows/default
     environment:
       project_name: Kveer.XmlRPC
       configuration: Release
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - dotnet-packages-v1-{{ checksum "${project_name}/${project_name}.csproj" }}
       - run:
           name: Install dependencies
           command: dotnet restore "${project_name}/${project_name}.csproj"
+      - save_cache:
+          paths:
+            c:\Users\circleci\.nuget\packages
+          key: dotnet-packages-v1-{{ checksum "${project_name}/${project_name}.csproj" }}
       - run:
           name: Compile project
           command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
       - run:
           name: Run unit tests
-          command: dotnet test "${project_name}".Tests
+          command: dotnet test -v n --results-directory:test_coverage --collect:"Code Coverage" "${project_name}.Tests"
       - run:
           name: Build nuget package
           command: dotnet pack -c "${configuration}" --include-symbols "${project_name}/${project_name}.csproj"
@@ -25,6 +36,8 @@ jobs:
           command: |
             mkdir /artifacts
             cp "${project_name}/bin/${configuration}/${project_name}.*.nupkg" /artifacts
+      - store_artifacts:
+          path: C:\Users\circleci\project\test_coverage
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
