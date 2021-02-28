@@ -22,9 +22,9 @@ jobs:
       - run:
           name: Compile project
           command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
-      #- run:
-      #    name: Run unit tests
-      #    command: dotnet test -v n --results-directory:test_coverage --collect:"Code Coverage" "${project_name}.Tests"
+      - run:
+          name: Run unit tests
+          command: dotnet test -v n --results-directory:test_coverage --collect:"Code Coverage" "${project_name}.Tests"
       - run:
           name: Build nuget package
           command: dotnet pack -c "${configuration}" --include-symbols "${project_name}/${project_name}.csproj"
@@ -32,10 +32,12 @@ jobs:
           name: Copy artifacts
           command: |
             mkdir /artifacts
-            ls -lha "${project_name}/bin/${configuration}"
-            cp "${project_name}/bin/${configuration}/${project_name}.*.nupkg" /artifacts
+            cp ${project_name}/bin/${configuration}/${project_name}.*.nupkg /artifacts
       - store_artifacts:
-          path: C:\Users\circleci\project\test_coverage
+          path: /artifacts
+      - store_artifacts:
+          path: ${project_name}.Tests/test_coverage/
+          destination: tes-coverage
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
