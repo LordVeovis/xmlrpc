@@ -36,8 +36,8 @@ jobs:
       - store_artifacts:
           path: /artifacts
       - store_artifacts:
-          path: ${project_name}.Tests/test_coverage/
-          destination: tes-coverage
+          path: ${project_name}.Tests/test_coverage/*
+          destination: test-coverage
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
