@@ -9,22 +9,15 @@ jobs:
       configuration: Release
     steps:
       - checkout
-      #- restore_cache:
-      #    keys:
-      #      - dotnet-packages-v1-{{ checksum "Kveer.XmlRPC/Kveer.XmlRPC.csproj" }}
       - run:
           name: Install dependencies
           command: dotnet restore "${project_name}/${project_name}.csproj"
-      #- save_cache:
-      #    paths:
-      #      - /root/.nuget/packages
-      #    key: dotnet-packages-v1-{{ checksum "Kveer.XmlRPC/Kveer.XmlRPC.csproj" }}
       - run:
           name: Compile project
           command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
       - run:
           name: Run unit tests
-          command: dotnet test -v n --results-directory:test_coverage --collect:"Code Coverage" "${project_name}.Tests"
+          command: dotnet test -v n "${project_name}.Tests"
       - run:
           name: Build nuget package
           command: dotnet pack -c "${configuration}" --include-symbols "${project_name}/${project_name}.csproj"
@@ -35,9 +28,10 @@ jobs:
             cp ${project_name}/bin/${configuration}/${project_name}.*.nupkg /artifacts
       - store_artifacts:
           path: /artifacts
-      - store_artifacts:
-          path: ${project_name}.Tests/test_coverage/*
-          destination: test-coverage
+      - persist_to_workspace:
+          root: /artifacts
+          paths:
+            - '*'
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
