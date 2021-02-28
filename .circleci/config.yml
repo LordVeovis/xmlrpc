@@ -1,12 +1,14 @@
 version: 2.1
 
-orbs:
-  windows: circleci/windows@2.4.0
+#orbs:
+#  windows: circleci/windows@2.4.0
 
 jobs:
   build:
-    executor:
-      name: windows/default
+    #executor:
+    #  name: windows/default
+    docker:
+      - image: microsoft/dotnet:2.1-sdk-alpine
     environment:
       project_name: Kveer.XmlRPC
       configuration: Release
