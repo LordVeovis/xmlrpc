@@ -1,5 +1,6 @@
 # Kveer.XmlRPC
 
+[![CircleCI](https://circleci.com/gh/LordVeovis/xmlrpc.svg?style=shield)](https://app.circleci.com/pipelines/github/LordVeovis)
 [![Build Status](https://gitlab.kveer.fr/veovis/xmlrpc/badges/master/pipeline.svg)](https://gitlab.kveer.fr/veovis/xmlrpc/pipelines)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/72ed394545f947dca0620204fd223627)](https://app.codacy.com/app/LordVeovis/xmlrpc?utm_source=github.com&utm_medium=referral&utm_content=LordVeovis/xmlrpc&utm_campaign=badger)
 [![Code Coverage](https://gitlab.kveer.fr/veovis/xmlrpc/badges/master/coverage.svg)](https://gitlab.kveer.fr/veovis/xmlrpc/pipelines)

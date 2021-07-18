@@ -7,9 +7,8 @@
     <Company>Kveer</Company>
     <Description>A port of CookComputing.XmlRpcV2 for dotnet core 2.</Description>
     <Copyright>Sébastien Rault</Copyright>
-    <SignAssembly>false</SignAssembly>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.2.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>- publish the symbols on https://nuget.smbsrc.net
 - fully automate the build</PackageReleaseNotes>
@@ -18,6 +17,12 @@
     <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <AssemblyOriginatorKeyFile>sn-prd.pub</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup  Condition=" '$(CIRCLE_TAG)' != '' ">
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

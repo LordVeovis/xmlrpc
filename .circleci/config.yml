@@ -3,18 +3,29 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: microsoft/dotnet:2.1-sdk-alpine
+      - image: mcr.microsoft.com/dotnet/sdk:3.1
     environment:
       project_name: Kveer.XmlRPC
       configuration: Release
     steps:
       - checkout
       - run:
+          name: Install mono-devel (sn provider)
+          command: apt update && apt install -y mono-devel
+      - run:
           name: Install dependencies
           command: dotnet restore "${project_name}/${project_name}.csproj"
       - run:
+          name: Set nupkg version
+          command: |
+            [ "${CIRCLE_TAG}" == "" ] || sed -i "s_\(<Version>\).*\(</Version>\)_\1$CIRCLE_TAG\2_" "${project_name}/${project_name}.csproj"
+            grep '<Version' "${project_name}/${project_name}.csproj"
+      - run:
           name: Compile project
           command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
+      - run:
+          name: Sign the assembly
+          command: '[ "${CIRCLE_TAG}" == "" ] || echo "${sn_pwd}" | sn -R ${project_name}/bin/${configuration}/netstandard2.0/${project_name}.dll ${project_name}/sn-prd.pfx'
       - run:
           name: Run unit tests
           command: dotnet test -v n "${project_name}.Tests"
@@ -42,6 +53,20 @@ jobs:
           name: "Publish Release on Github"
           command: |
             ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" -delete -draft "${CIRCLE_TAG}" ./artifacts/
+  publish-nuget-package:
+    docker:
+      - image: mcr.microsoft.com/dotnet/sdk:3.1
+    steps:
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: "Push package on nuget"
+          command: |
+            cd ./artifacts
+            ls -lh --color
+            dotnet nuget push ${project_name}.$CIRCLE_TAG.nupkg -k $nuget_key -s nuget.org
+            dotnet nuget push ${project_name}.$CIRCLE_TAG.symbols.nupkg -k $nuget_key -s https://nuget.smbsrc.net/
+  only:
 
 workflows:
   version: 2
@@ -52,6 +77,14 @@ workflows:
             tags:
               only: /^\d+\.\d+\.\d+$/
       - publish-github-release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+      - publish-nuget-package:
           requires:
             - build
           filters:
