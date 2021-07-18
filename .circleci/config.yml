@@ -56,6 +56,8 @@ jobs:
   publish-nuget-package:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:3.1
+    environment:
+      project_name: Kveer.XmlRPC
     steps:
       - attach_workspace:
           at: ./artifacts
@@ -63,7 +65,6 @@ jobs:
           name: "Push package on nuget"
           command: |
             cd ./artifacts
-            ls -lh --color
             dotnet nuget push ${project_name}.$CIRCLE_TAG.nupkg -k $nuget_key -s nuget.org
             dotnet nuget push ${project_name}.$CIRCLE_TAG.symbols.nupkg -k $nuget_key -s https://nuget.smbsrc.net/
   only:
