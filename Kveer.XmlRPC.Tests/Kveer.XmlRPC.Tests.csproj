@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Kveer.XmlRPC.Tests</RootNamespace>
     <Authors>Sébastien Rault</Authors>
     <Company>Kveer</Company>
@@ -9,10 +9,10 @@
     <Copyright>Sébastien Rault</Copyright>
     <SignAssembly>false</SignAssembly>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.2.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
@@ -20,6 +20,7 @@
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,9 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="invoketest.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="invoketest.cs" />
   </ItemGroup>
 
   <ItemGroup>

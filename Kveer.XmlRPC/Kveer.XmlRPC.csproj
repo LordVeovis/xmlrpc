@@ -5,19 +5,26 @@
     <RootNamespace>CookComputing.XmlRpc</RootNamespace>
     <Authors>Sébastien Rault</Authors>
     <Company>Kveer</Company>
-    <Description>A port of CookComputing.XmlRpcV2 for dotnet core 2.</Description>
+    <Description>A port of CookComputing.XmlRpcV2 for dotnet core.</Description>
     <Copyright>Sébastien Rault</Copyright>
-    <SignAssembly>false</SignAssembly>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.2.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>- publish the symbols on https://nuget.smbsrc.net
-- fully automate the build</PackageReleaseNotes>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageReleaseNotes>- switch to circle-ci
+- assembly has now a strong name
+- upgrade compiler to .net 3.1 as 2.1 is out of support (still .netstandard2.0 compliant)</PackageReleaseNotes>
+    <PackageLicense>MIT License</PackageLicense>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <AssemblyOriginatorKeyFile>sn-prd.pub</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(CIRCLE_TAG)' != '' ">
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
