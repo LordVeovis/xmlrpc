@@ -25,7 +25,10 @@ jobs:
           command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
       - run:
           name: Sign the assembly
-          command: '[ "${CIRCLE_TAG}" == "" ] || echo "${sn_pwd}" | sn -R ${project_name}/bin/${configuration}/netstandard2.0/${project_name}.dll ${project_name}/sn-prd.pfx'
+          command: |
+            if [ "${CIRCLECI}" == "true" ]; then
+              echo "${sn_pwd}" | sn -R ${project_name}/bin/${configuration}/netstandard2.0/${project_name}.dll ${project_name}/sn-prd.pfx'
+            fi
       - run:
           name: Run unit tests
           command: dotnet test -v n "${project_name}.Tests"
@@ -46,7 +49,7 @@ jobs:
             - '*'
   publish-github-release:
     docker:
-      - image: cibuilds/github:0.10
+      - image: cibuilds/github:0.13
     steps:
       - attach_workspace:
           at: ./artifacts
