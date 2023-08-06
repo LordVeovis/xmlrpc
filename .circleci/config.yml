@@ -27,7 +27,7 @@ jobs:
           name: Sign the assembly
           command: |
             if [ "${CIRCLECI}" == "true" ]; then
-              echo "${sn_pwd}" | sn -R ${project_name}/bin/${configuration}/netstandard2.0/${project_name}.dll ${project_name}/sn-prd.pfx'
+              echo "${sn_pwd}" | sn -R ${project_name}/bin/${configuration}/netstandard2.0/${project_name}.dll ${project_name}/sn-prd.pfx
             fi
       - run:
           name: Run unit tests
