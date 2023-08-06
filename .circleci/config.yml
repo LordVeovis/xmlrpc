@@ -68,7 +68,6 @@ jobs:
             cd ./artifacts
             dotnet nuget push ${project_name}.$CIRCLE_TAG.nupkg -k $nuget_key -s nuget.org
             dotnet nuget push ${project_name}.$CIRCLE_TAG.snupkg -sk $nuget_key -s https://nuget.smbsrc.net/
-  only:
 
 workflows:
   version: 2
