@@ -8,7 +8,7 @@
     <Description>A port of CookComputing.XmlRpcV2 for dotnet core.</Description>
     <Copyright>Sébastien Rault</Copyright>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>- switch to circle-ci
 - assembly has now a strong name

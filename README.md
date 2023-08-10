@@ -10,7 +10,7 @@ This repository contains a .net library for consuming XML-RPC web services. It i
 
 ## How to use
 
-As a port, very few changes have been done but the API is still the same. The documentation on the orignal projet remains valid: http://xml-rpc.net/
+As a port, very few changes have been done but the API is still the same. The documentation on the orignal projet remains valid: [http://xml-rpc.net/][]
 
 ## Improvements
 
@@ -21,3 +21,4 @@ As a port, very few changes have been done but the API is still the same. The do
 This library is licensed under the [MIT license][].
 
 [MIT license]: https://github.com/LordVeovis/xmlrpc/blob/master/LICENSE
+[http://xml-rpc.net/]: https://web.archive.org/web/20210909161907/http://xml-rpc.net/
