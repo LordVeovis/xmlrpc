@@ -54,19 +54,19 @@ namespace CookComputing.XmlRpc
 			AsyncCallback userCallback,
 			object userAsyncState)
 		{
-			XmlRpcRequest          = xmlRpcReq;
-			ClientProtocol         = clientProtocol;
-			Request                = request;
-			AsyncState         = userAsyncState;
+			XmlRpcRequest           = xmlRpcReq;
+			ClientProtocol          = clientProtocol;
+			Request                 = request;
+			AsyncState              = userAsyncState;
 			_userCallback           = userCallback;
 			_completedSynchronously = true;
-			XmlEncoding            = xmlEncoding;
-			UseEmptyParamsTag     = useEmptyParamsTag;
-			UseIndentation        = useIndentation;
-			Indentation           = indentation;
-			UseIntTag             = useIntTag;
-			UseIntTag             = useLongTag;
-			UseStringTag          = useStringTag;
+			XmlEncoding             = xmlEncoding;
+			UseEmptyParamsTag       = useEmptyParamsTag;
+			UseIndentation          = useIndentation;
+			Indentation             = indentation;
+			UseIntTag               = useIntTag;
+			UseLongTag              = useLongTag;
+			UseStringTag            = useStringTag;
 		}
 
 #if (!COMPACT_FRAMEWORK)
