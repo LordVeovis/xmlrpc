@@ -10,7 +10,7 @@ This repository contains a .net library for consuming XML-RPC web services. It i
 
 ## How to use
 
-As a port, very few changes have been done but the API is still the same. The documentation on the orignal projet remains valid: [http://xml-rpc.net/][]
+As a port, very few changes have been done but the API is still the same. The documentation on the original project remains valid: [http://xml-rpc.net/][]
 
 ## Improvements
 

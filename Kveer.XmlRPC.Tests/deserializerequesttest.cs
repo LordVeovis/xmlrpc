@@ -657,6 +657,31 @@ AQIDBAUGBwg=</base64>
 							"argument is int");
 			Assert.AreEqual((int)request.args[0], 666, "argument is 666");
 		}
+		
+		// test handling long values
+		[Test]
+		public void Long()
+		{
+			var xml = @"<?xml version=""1.0"" ?> 
+<methodCall>
+  <methodName>TestLong</methodName> 
+  <params>
+    <param>
+      <value>
+        <long>666</long>
+      </value>
+    </param>
+  </params>
+</methodCall>";
+			var sr = new StringReader(xml);
+			var serializer = new XmlRpcSerializer();
+			var request = serializer.DeserializeRequest(sr, null);
+
+			Assert.IsTrue(request.method == "TestLong", "method is TestLong");
+			Assert.AreEqual(request.args[0].GetType(), typeof(long),
+				"argument is int");
+			Assert.AreEqual((long)request.args[0], 666, "argument is 666");
+		}
 
 		[Test]
 		public void IntegerWithPlus()
