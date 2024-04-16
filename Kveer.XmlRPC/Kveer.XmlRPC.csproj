@@ -22,7 +22,7 @@
     <SignAssembly>false</SignAssembly>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(CIRCLECI)' == 'true' ">
+  <PropertyGroup Condition=" '$(CIRCLE_TAG)' != '' ">
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
