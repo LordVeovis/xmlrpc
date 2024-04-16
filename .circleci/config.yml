@@ -22,19 +22,19 @@ jobs:
             grep '<Version' "${project_name}/${project_name}.csproj"
       - run:
           name: Compile project
-          command: dotnet build -c "${configuration}" "${project_name}/${project_name}.csproj"
+          command: dotnet build --no-restore -c "${configuration}" "${project_name}/${project_name}.csproj"
       - run:
           name: Sign the assembly
           command: |
-            if [ "${CIRCLE_TAG}" == "true" ]; then
+            if [ "${CIRCLE_TAG}" != "" ]; then
               echo "${sn_pwd}" | sn -R ${project_name}/bin/${configuration}/netstandard2.0/${project_name}.dll ${project_name}/sn-prd.pfx
             fi
       - run:
           name: Run unit tests
-          command: dotnet test -v n "${project_name}.Tests/${project_name}.csproj"
+          command: dotnet test -v n "${project_name}.Tests/${project_name}.Tests.csproj"
       - run:
           name: Build nuget package
-          command: dotnet pack -c "${configuration}" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg "${project_name}/${project_name}.csproj"
+          command: dotnet pack --no-build -c "${configuration}" -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg "${project_name}/${project_name}.csproj"
       - run:
           name: Copy artifacts
           command: |
