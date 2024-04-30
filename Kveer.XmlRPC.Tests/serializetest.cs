@@ -1135,6 +1135,36 @@ namespace Kveer.XmlRPC.Tests
 					.Replace("\r\n", Environment.NewLine), reqstr);
 		}
 
+		[Test]
+		public void UseLong()
+		{
+			Stream stm = new MemoryStream();
+			var req = new XmlRpcRequest();
+			req.args = new object[] { 1234L };
+			req.method = "Foo";
+			var ser = new XmlRpcSerializer();
+			ser.Indentation = 4;
+			ser.UseLongTag = true;
+			ser.SerializeRequest(stm, req);
+			stm.Position = 0;
+			TextReader tr = new StreamReader(stm);
+			var reqstr = tr.ReadToEnd();
+
+			Assert.AreEqual(
+				@"<?xml version=""1.0""?>
+<methodCall>
+    <methodName>Foo</methodName>
+    <params>
+        <param>
+            <value>
+                <long>1234</long>
+            </value>
+        </param>
+    </params>
+</methodCall>"
+					.Replace("\r\n", Environment.NewLine), reqstr);
+		}
+		
 		//---------------------- XmlRpcBoolean --------------------------------// 
 		[Test]
 		public void XmlRpcBoolean()

@@ -56,6 +56,8 @@ namespace CookComputing.XmlRpc
 		public bool UseIndentation { get; set; } = true;
 
 		public bool UseIntTag { get; set; }
+		
+		public bool UseLongTag { get; set; }
 
 		public bool UseStringTag { get; set; } = true;
 
@@ -411,7 +413,7 @@ namespace CookComputing.XmlRpc
 				}
 				else if (xType == XmlRpcType.tInt64)
 				{
-					xtw.WriteElementString("i8", o.ToString());
+					xtw.WriteElementString(UseLongTag ? "long" : "i8", o.ToString());
 				}
 				else if (xType == XmlRpcType.tString)
 				{
@@ -617,7 +619,7 @@ namespace CookComputing.XmlRpc
 					parsedType = typeof(int);
 					parsedArrayType = typeof(int[]);
 				}
-				else if (node.Name == "i8")
+				else if (node.Name == "i8"  || node.Name == "long")
 				{
 					retObj = ParseLong(node, valType, parseStack);
 					parsedType = typeof(long);

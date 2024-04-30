@@ -1,4 +1,4 @@
-/* 
+/*
 XML-RPC.NET library
 Copyright (c) 2001-2006, Charles Cook <charlescook@cookcomputing.com>
 
@@ -48,23 +48,25 @@ namespace CookComputing.XmlRpc
 			bool useIndentation,
 			int indentation,
 			bool useIntTag,
+			bool useLongTag,
 			bool useStringTag,
 			WebRequest request,
 			AsyncCallback userCallback,
 			object userAsyncState)
 		{
-			XmlRpcRequest          = xmlRpcReq;
-			ClientProtocol         = clientProtocol;
-			Request                = request;
-			AsyncState         = userAsyncState;
+			XmlRpcRequest           = xmlRpcReq;
+			ClientProtocol          = clientProtocol;
+			Request                 = request;
+			AsyncState              = userAsyncState;
 			_userCallback           = userCallback;
 			_completedSynchronously = true;
-			XmlEncoding            = xmlEncoding;
-			UseEmptyParamsTag     = useEmptyParamsTag;
-			UseIndentation        = useIndentation;
-			Indentation           = indentation;
-			UseIntTag             = useIntTag;
-			UseStringTag          = useStringTag;
+			XmlEncoding             = xmlEncoding;
+			UseEmptyParamsTag       = useEmptyParamsTag;
+			UseIndentation          = useIndentation;
+			Indentation             = indentation;
+			UseIntTag               = useIntTag;
+			UseLongTag              = useLongTag;
+			UseStringTag            = useStringTag;
 		}
 
 #if (!COMPACT_FRAMEWORK)
@@ -85,6 +87,8 @@ namespace CookComputing.XmlRpc
 		public bool UseIntTag { get; }
 
 		public bool UseStringTag { get; }
+		
+		public bool UseLongTag { get; }
 
 		public Exception Exception { get; private set; }
 

@@ -93,6 +93,8 @@ namespace CookComputing.XmlRpc
 
 		bool UseIntTag { get; set; }
 
+		bool UseLongTag { get; set; }
+		
 		bool UseStringTag { get; set; }
 
 		string UserAgent { get; set; }
