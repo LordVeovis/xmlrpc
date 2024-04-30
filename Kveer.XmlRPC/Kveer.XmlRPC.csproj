@@ -14,7 +14,7 @@
 - assembly has now a strong name
 - upgrade compiler to .net 8.0 as 3.1 is out of support (still .netstandard2.0 compliant)</PackageReleaseNotes>
     <PackageLicense>MIT License</PackageLicense>
-    <PackageReadmeFile>..\README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/LordVeovis/xmlrpc</PackageProjectUrl>
     <RepositoryUrl>git@github.com:LordVeovis/xmlrpc.git</RepositoryUrl>
