@@ -8,11 +8,10 @@
     <Description>A port of CookComputing.XmlRpcV2 for dotnet core.</Description>
     <Copyright>Sébastien Rault</Copyright>
     <PackageTags>xmlrpc</PackageTags>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>- switch to circle-ci
-- assembly has now a strong name
-- upgrade compiler to .net 8.0 as 3.1 is out of support (still .netstandard2.0 compliant)</PackageReleaseNotes>
+    <PackageReleaseNotes>- add support for &lt;long&gt; nodes
+- update targetframework to a supported version</PackageReleaseNotes>
     <PackageLicense>MIT License</PackageLicense>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -30,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
